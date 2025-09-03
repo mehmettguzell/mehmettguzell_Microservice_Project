@@ -65,5 +65,6 @@ docker-compose.override.yml
 /test-output/
 coverage/
 
-
 product-service/data/
+product-service/data/*
+product-service/data/*/*
