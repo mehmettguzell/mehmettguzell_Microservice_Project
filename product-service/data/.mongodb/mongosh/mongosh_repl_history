@@ -1,0 +1,100 @@
+cls
+clear
+dockercompose stop
+docker compose stop
+cls
+db.product.find()
+show tables
+clear
+use product_service_mehmettguzell
+show dbs
+use admin
+cls
+clear
+db.dropDatabase()
+use product_service_mehmettguzel
+show dbs
+show db
+use admin
+db.product.find()
+db.product()
+show tables
+help
+use product_service_mehmettguzell
+show dbs
+use admin
+db.product.find()
+cls
+clear
+db.product.find().pretty()
+db.product.find()
+cls
+db.product.find()
+show tables
+show collections
+show collevtions
+help
+show records
+use product_service_mehmettguzell
+show dbs
+cls
+use admin
+cls
+help
+cls
+--help
+show 
+cls
+use product_service_mehmettguzell
+show dbs
+cls
+show dbs
+cls
+clear
+use admin
+db.auth("root","password")
+use admin
+cls
+use admin
+cls
+clear
+cleat
+cls
+dockercompose stop
+docker compose stop
+cls
+show dbs
+cls
+db.product.insertOne({name:"test", amount:1})
+show dbs
+db.product
+show dbs
+use product_service_mehmettguzell
+create dbs
+cls
+cl
+cls
+help
+show dbs
+cls
+use admin
+cls
+clear
+show dbs
+cls
+ls
+use admin
+cls
+mongosh "mongodb://myuser:mypassword@localhost:27017/admin"
+help
+mongosh "mongodb://myuser:mypassword@localhost:27017/admin"
+cls
+clear
+show dbs
+help
+show dbs
+cls dbs
+clss
+help
+show dbs
+cls
