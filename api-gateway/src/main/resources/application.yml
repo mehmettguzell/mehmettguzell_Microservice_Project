@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: api-gateway
+  #  security:
+  #    oauth2:
+  #          resource server:
+  #            jwt:
+  #              issuer-uri: http://localhost:8181/realms/mehmettguzell-microservices
+
+server:
+  port: 9000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: ProductService
+        url: /aggregate/product-service/v3/api-docs
+      - name: OrderService
+        url: /aggregate/order-service/v3/api-docs
+      - name: InventoryService
+        url: /aggregate/inventory-service/v3/api-docs
+  api-docs:
+    path: /api-docs
+
+services:
+  services:
+    product: http://localhost:8080
+    order: http://localhost:8081
+    inventory: http://localhost:8082
+
+
+#  cloud:
+#    gateway:
+#      server:
+#        webflux:
+#          routes:
+#            - id: product-service
+#              uri: ${PRODUCT_URI:http://localhost:8080}
+#              predicates:
+#                - Path=/api/product/**
+#              filters:
+#                - StripPrefix=1
