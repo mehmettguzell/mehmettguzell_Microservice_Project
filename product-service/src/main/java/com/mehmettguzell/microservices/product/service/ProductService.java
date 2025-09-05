@@ -19,10 +19,32 @@ public class ProductService {
 
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = toProductEntity(productRequest);
-        productRepository.save(product);
+        Product savedProduct = savedAndLogProduct(product, "created");
+        return toProductResponse(savedProduct);
+    }
 
-        log.info("Product created successfully: id={}, name={}", product.getId(), product.getName());
-        return toProductResponse(product);
+    public ProductResponse updateProduct(String requestProductId, ProductRequest requestProduct) {
+        Product updatedProduct = getProductOrThrow(requestProductId);
+        updateProductFromRequest(updatedProduct, requestProduct);
+        Product savedProduct = savedAndLogProduct(updatedProduct, "updated");
+        return toProductResponse(savedProduct);
+    }
+
+    public void updateProductFromRequest(Product product, ProductRequest request) {
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+    }
+
+    public Product savedAndLogProduct(Product product, String action){
+        productRepository.save(product);
+        log.info("Product {} : id={} , name={}", action, product.getId(), product.getName());
+        return product;
+    }
+
+    public Product getProductOrThrow(String productId){
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     public Product toProductEntity(ProductRequest productRequest){

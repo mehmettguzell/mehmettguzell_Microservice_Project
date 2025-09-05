@@ -28,4 +28,13 @@ public class ProductController {
     public List<ProductResponse> getAllProducts(){
         return productService.getAllProducts();
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductResponse updateProduct(@PathVariable String id,
+                                         @RequestBody ProductRequest productRequest){
+
+        return productService.updateProduct(id, productRequest);
+    }
+
 }
