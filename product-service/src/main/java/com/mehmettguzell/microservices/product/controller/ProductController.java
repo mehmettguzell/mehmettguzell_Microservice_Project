@@ -48,4 +48,10 @@ public class ProductController {
     public List<ProductResponse> getAllProducts(){
         return productService.getAllProducts();
     }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> searchProductByName(@RequestParam String name){
+        return productService.searchProductByName(name);
+    }
 }
