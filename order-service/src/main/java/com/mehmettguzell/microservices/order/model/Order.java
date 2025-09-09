@@ -1,5 +1,6 @@
 package com.mehmettguzell.microservices.order.model;
 
+import com.mehmettguzell.microservices.order.exception.OrderCannotBeConfirmedException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 
 public class Order {
     @Id
@@ -20,4 +22,15 @@ public class Order {
     private String skuCode;
     private BigDecimal price;
     private Integer quantity;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+
+    public void confirm() {
+        if (this.status != OrderStatus.PENDING) {
+            throw new OrderCannotBeConfirmedException(this.id);
+        }
+        this.status = OrderStatus.CONFIRMED;
+    }
 }
