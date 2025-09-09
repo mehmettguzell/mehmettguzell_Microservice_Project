@@ -2,6 +2,7 @@ package com.mehmettguzell.microservices.product.service;
 
 import com.mehmettguzell.microservices.product.dto.ProductResponse;
 import com.mehmettguzell.microservices.product.dto.ProductRequest;
+import com.mehmettguzell.microservices.product.exception.ProductNotFoundException;
 import com.mehmettguzell.microservices.product.model.Product;
 import com.mehmettguzell.microservices.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class ProductService {
 
     private Product getProductEntityOrThrow(String id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     private Product saveAndLogProduct(Product product, String action) {
