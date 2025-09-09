@@ -3,6 +3,7 @@ package com.mehmettguzell.microservices.product.service;
 import com.mehmettguzell.microservices.product.dto.ProductResponse;
 import com.mehmettguzell.microservices.product.dto.ProductRequest;
 import com.mehmettguzell.microservices.product.exception.ProductNotFoundException;
+import com.mehmettguzell.microservices.product.mapper.ProductMapper;
 import com.mehmettguzell.microservices.product.model.Product;
 import com.mehmettguzell.microservices.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,35 +19,35 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     // ==== PUBLIC API (CRUD + Queries) ====
-
     @Transactional
     public ProductResponse createProduct(ProductRequest request) {
-        Product product = toProductEntity(request);
+        Product product = productMapper.toEntity(request);
         Product savedProduct = saveAndLogProduct(product, "created");
-        return toProductResponse(savedProduct);
+        return productMapper.toResponse(savedProduct);
     }
 
     public ProductResponse getProduct(String id) {
         Product product = getProductEntityOrThrow(id);
-        return toProductResponse(product);
+        return productMapper.toResponse(product);
     }
 
     public List<ProductResponse> getAllProducts() {
-        return toProductResponseList(productRepository.findAll());
+        return productMapper.toResponseList(productRepository.findAll());
     }
 
     public List<ProductResponse> searchProductByName(String name) {
-        return toProductResponseList(productRepository.findByNameContainingIgnoreCase(name));
+        return productMapper.toResponseList(productRepository.findByNameContainingIgnoreCase(name));
     }
 
     @Transactional
     public ProductResponse updateProduct(String id, ProductRequest request) {
         Product product = getProductEntityOrThrow(id);
-        applyRequestToProduct(product, request);
+        productMapper.updateEntity(product, request);
         Product savedProduct = saveAndLogProduct(product, "updated");
-        return toProductResponse(savedProduct);
+        return productMapper.toResponse(savedProduct);
     }
 
     @Transactional
@@ -77,34 +78,4 @@ public class ProductService {
         log.info("Product {} : id={} , name={}", action, product.getId(), product.getName());
     }
 
-    private void applyRequestToProduct(Product product, ProductRequest request) {
-        product.setName(request.name());
-        product.setDescription(request.description());
-        product.setPrice(request.price());
-    }
-
-    // ==== MAPPERS ====
-
-    private Product toProductEntity(ProductRequest request) {
-        return Product.builder()
-                .name(request.name())
-                .description(request.description())
-                .price(request.price())
-                .build();
-    }
-
-    private ProductResponse toProductResponse(Product product) {
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice()
-        );
-    }
-
-    private List<ProductResponse> toProductResponseList(List<Product> products) {
-        return products.stream()
-                .map(this::toProductResponse)
-                .toList();
-    }
 }
