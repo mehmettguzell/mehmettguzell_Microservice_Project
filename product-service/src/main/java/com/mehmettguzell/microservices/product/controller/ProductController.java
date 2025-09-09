@@ -30,7 +30,7 @@ public class ProductController {
         return productService.getProduct(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts(){
         return productService.getAllProducts();
@@ -42,7 +42,7 @@ public class ProductController {
         return productService.searchProductByName(name);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponse updateProduct(@PathVariable String id,
                                          @Valid @RequestBody ProductRequest productRequest){
@@ -50,9 +50,9 @@ public class ProductController {
         return productService.updateProduct(id, productRequest);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@PathVariable String id){
+    public void deleteProduct(@RequestParam String id){
         productService.deleteProduct(id);
     }
 }

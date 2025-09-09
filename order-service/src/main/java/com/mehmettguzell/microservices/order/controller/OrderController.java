@@ -23,34 +23,34 @@ public class OrderController {
         return orderService.placeOrder(orderRequest);
     }
 
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> getAllOrders() {
-        return orderService.getAllOrders();
-    }
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse getOrder(@PathVariable Long id) {
         return orderService.getOrderById(id);
     }
 
-    @PutMapping("/{id}")
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderResponse> getAllOrders() {
+        return orderService.getAllOrders();
+    }
+
+    @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse updateOrder(@PathVariable Long id,
                                      @Valid @RequestBody OrderRequest orderRequest) {
         return orderService.updateOrder(id, orderRequest);
     }
 
-    @GetMapping("/{id}/confirm")
+    @PatchMapping("/confirm/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse confirmOrder(@PathVariable Long id){
         return orderService.confirmOrder(id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@PathVariable Long id) {
+    public void deleteOrder(@RequestParam Long id) {
         orderService.deleteOrder(id);
     }
 }
