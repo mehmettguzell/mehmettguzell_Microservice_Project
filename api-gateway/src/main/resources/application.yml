@@ -1,11 +1,21 @@
 spring:
   application:
     name: api-gateway
-  #  security:
-  #    oauth2:
-  #          resource server:
-  #            jwt:
-  #              issuer-uri: http://localhost:8181/realms/mehmettguzell-microservices
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/mehmettguzell-microservices
+
+myapp:
+  security:
+    open-paths:
+      - /swagger-ui.html
+      - /swagger-ui/**
+      - /v3/api-docs/**
+      - /swagger-resources/**
+      - /aggregate/**
+      - /api-docs/*
 
 server:
   port: 9000
