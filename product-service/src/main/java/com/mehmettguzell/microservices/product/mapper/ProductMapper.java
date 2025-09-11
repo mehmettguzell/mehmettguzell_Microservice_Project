@@ -12,6 +12,7 @@ public class ProductMapper {
     public Product toEntity(ProductRequest request) {
         return Product.builder()
                 .name(request.name())
+                .skuCode(request.skuCode())
                 .description(request.description())
                 .price(request.price())
                 .build();
@@ -21,6 +22,7 @@ public class ProductMapper {
         return new ProductResponse(
                 product.getId(),
                 product.getName(),
+                product.getSkuCode(),
                 product.getDescription(),
                 product.getPrice()
         );

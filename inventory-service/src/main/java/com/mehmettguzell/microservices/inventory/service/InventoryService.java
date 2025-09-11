@@ -39,12 +39,25 @@ public class InventoryService {
                 .toList();
     }
 
+    public boolean isSkuCodeValid(@Valid String skuCode) {
+        return inventoryRepository.existsBySkuCode(skuCode);
+    }
+
     public boolean isInStock(String skuCode, Integer quantity) {
         return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
     }
 
-    public void deleteInventory(Long id) {
+    public void setQuantityZero(Long id) {
         Inventory inventory = findInventoryById(id);
+        setQuantityZero(inventory);
+    }
+
+    public void setQuantityZero(String skuCode) {
+        Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
+        setQuantityZero(inventory);
+    }
+
+    private void setQuantityZero(Inventory inventory) {
         inventory.setQuantity(0);
         saveAndLogInventory(inventory, "Inventory Quantity: 0: ");
     }
@@ -56,7 +69,6 @@ public class InventoryService {
         return inventoryMapper.toResponse(updatedInventory);
     }
 
-    // ----------- PRIVATE HELPERS -----------
 
     private Inventory findInventoryById(Long id) {
         return inventoryRepository.findById(id)
@@ -77,4 +89,6 @@ public class InventoryService {
     private void logInventory(String message, Inventory inventory) {
         log.info("{} {}", message, inventory);
     }
+
+
 }

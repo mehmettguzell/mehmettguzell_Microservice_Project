@@ -24,10 +24,17 @@ public class InventoryController {
         return inventoryService.createInventory(inventoryRequest);
     }
 
+
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<InventoryResponse> getAllInventory() {
         return inventoryService.getAllInventories();
+    }
+
+    @GetMapping("/validate")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean isSkuCodeValid(@Valid @RequestParam("skuCode") String skuCode){
+        return inventoryService.isSkuCodeValid(skuCode);
     }
 
     @GetMapping
@@ -45,7 +52,14 @@ public class InventoryController {
 
     @DeleteMapping()
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteInventory(@RequestParam Long id) {
-        inventoryService.deleteInventory(id);
+    public void setQuantityZero(@RequestParam(required = false) Long id,
+                                @RequestParam(required = false) String skuCode) {
+        if (id != null) {
+            inventoryService.setQuantityZero(id);
+        } else if (skuCode != null) {
+            inventoryService.setQuantityZero(skuCode);
+        } else {
+            throw new IllegalArgumentException("Either id or skuCode must be provided");
+        }
     }
 }

@@ -16,6 +16,11 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("Product Not Found", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(InvalidSkuCodeException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSkuCodeException(InvalidSkuCodeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid Sku Code", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -28,4 +33,5 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("Error", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

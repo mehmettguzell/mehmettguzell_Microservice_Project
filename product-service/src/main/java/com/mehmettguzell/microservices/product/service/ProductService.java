@@ -1,7 +1,9 @@
 package com.mehmettguzell.microservices.product.service;
 
+import com.mehmettguzell.microservices.product.client.InventoryClient;
 import com.mehmettguzell.microservices.product.dto.ProductResponse;
 import com.mehmettguzell.microservices.product.dto.ProductRequest;
+import com.mehmettguzell.microservices.product.exception.InvalidSkuCodeException;
 import com.mehmettguzell.microservices.product.exception.ProductNotFoundException;
 import com.mehmettguzell.microservices.product.mapper.ProductMapper;
 import com.mehmettguzell.microservices.product.model.Product;
@@ -20,10 +22,11 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final InventoryClient inventoryClient;
 
-    // ==== PUBLIC API (CRUD + Queries) ====
     @Transactional
     public ProductResponse createProduct(ProductRequest request) {
+        validateSkuCode(request.skuCode());
         Product product = productMapper.toEntity(request);
         Product savedProduct = saveAndLogProduct(product, "created");
         return productMapper.toResponse(savedProduct);
@@ -53,10 +56,19 @@ public class ProductService {
     @Transactional
     public void deleteProduct(String id) {
         Product product = getProductEntityOrThrow(id);
+        inventoryQuantityZero(product.getSkuCode());
         deleteAndLogProduct(product);
     }
 
-    // ==== PRIVATE HELPERS ====
+    private void validateSkuCode(String skuCode) {
+        if (!inventoryClient.isSkuCodeValid(skuCode)) {
+            throw new InvalidSkuCodeException(skuCode);
+        }
+    }
+
+    private void inventoryQuantityZero(String skuCode) {
+        inventoryClient.setQuantityZero(skuCode);
+    }
 
     private Product getProductEntityOrThrow(String id) {
         return productRepository.findById(id)
