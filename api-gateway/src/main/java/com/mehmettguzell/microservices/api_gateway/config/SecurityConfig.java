@@ -11,31 +11,30 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
-
-    private final SecurityProperties securityProperties;
-
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
-                .authorizeExchange(auth -> auth
-                        .pathMatchers(securityProperties.getOpenPaths().toArray(new String[0])).permitAll()
-                        .anyExchange().authenticated()
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-
-        return http.build();
-    }
-}
-
-//// Authorization is off
-//@Configuration
 //public class SecurityConfig {
+//
+//    private final SecurityProperties securityProperties;
+//
 //    @Bean
 //    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 //        http
-//                .authorizeExchange(ex -> ex.anyExchange().permitAll())
-//                .csrf(csrf -> csrf.disable());
+//                .authorizeExchange(auth -> auth
+//                        .pathMatchers(soseecurityProperties.getOpenPaths().toArray(new String[0])).permitAll()
+//                        .anyExchange().authenticated()
+//                )
+//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+//
 //        return http.build();
 //    }
-//
+//}
+
+// Authorization is off
+public class SecurityConfig {
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+        http
+                .authorizeExchange(ex -> ex.anyExchange().permitAll())
+                .csrf(csrf -> csrf.disable());
+        return http.build();
+    }
+}

@@ -77,5 +77,4 @@ public class ProductService {
     private void logProduct(Product product, String action) {
         log.info("Product {} : id={} , name={}", action, product.getId(), product.getName());
     }
-
 }

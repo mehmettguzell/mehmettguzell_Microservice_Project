@@ -45,7 +45,8 @@ public class InventoryService {
 
     public void deleteInventory(Long id) {
         Inventory inventory = findInventoryById(id);
-        deleteAndLogInventory(inventory, "Deleted inventory: ");
+        inventory.setQuantity(0);
+        saveAndLogInventory(inventory, "Inventory Quantity: 0: ");
     }
 
     public InventoryResponse addStock(Long id, InventoryRequest request) {

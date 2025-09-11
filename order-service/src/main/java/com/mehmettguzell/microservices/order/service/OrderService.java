@@ -24,8 +24,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final InventoryClient inventoryClient;
 
-    /* -------------------- Public CRUD Methods -------------------- */
-
     @Transactional
     public OrderResponse placeOrder(OrderRequest orderRequest) {
         ensureProductInStock(orderRequest);
@@ -64,12 +62,10 @@ public class OrderService {
     }
 
     @Transactional
-    public void deleteOrder(Long id) {
+    public void cancelOrder(Long id) {
         Order order = fetchOrder(id);
-        removeOrder(order);
+        order.setStatus(OrderStatus.CANCELLED);
     }
-
-    /* -------------------- Private Helper Methods -------------------- */
 
     private Order fetchOrder(Long id) {
         return orderRepository.findById(id)

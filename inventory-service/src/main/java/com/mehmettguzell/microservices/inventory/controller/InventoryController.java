@@ -36,7 +36,7 @@ public class InventoryController {
         return inventoryService.isInStock(skuCode, quantity);
     }
 
-    @PutMapping("/addStock/{id}")
+    @PatchMapping("/addStock/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public InventoryResponse addStock(@PathVariable Long id,
                                       @Valid @RequestBody InventoryRequest inventoryRequest) {

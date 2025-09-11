@@ -51,6 +51,6 @@ public class OrderController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@RequestParam Long id) {
-        orderService.deleteOrder(id);
+        orderService.cancelOrder(id);
     }
 }
