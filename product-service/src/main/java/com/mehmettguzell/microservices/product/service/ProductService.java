@@ -56,7 +56,9 @@ public class ProductService {
     @Transactional
     public void deleteProduct(String id) {
         Product product = getProductEntityOrThrow(id);
-        inventoryQuantityZero(product.getSkuCode());
+        if (product.getSkuCode() != null) {
+            inventoryQuantityZero(product.getSkuCode());
+        }
         deleteAndLogProduct(product);
     }
 
