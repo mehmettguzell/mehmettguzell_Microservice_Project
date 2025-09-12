@@ -24,12 +24,16 @@ public class InventoryService {
     private final InventoryRepository inventoryRepository;
     private final inventoryMapper inventoryMapper;
 
-    // ----------- PUBLIC API (CRUD + Queries) -----------
 
     public InventoryResponse createInventory(InventoryRequest request) {
         Inventory inventory = inventoryMapper.toEntity(request);
         Inventory savedInventory = saveAndLogInventory(inventory, "Created inventory: ");
         return inventoryMapper.toResponse(savedInventory);
+    }
+
+    public InventoryResponse findInventoryBySkuCode(String skuCode) {
+        Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
+        return inventoryMapper.toResponse(inventory);
     }
 
     public List<InventoryResponse> getAllInventories() {

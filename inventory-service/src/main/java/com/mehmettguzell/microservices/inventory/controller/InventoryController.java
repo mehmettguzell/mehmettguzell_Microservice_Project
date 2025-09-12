@@ -24,6 +24,11 @@ public class InventoryController {
         return inventoryService.createInventory(inventoryRequest);
     }
 
+    @GetMapping("/{skuCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public InventoryResponse findInventoryBySkuCode(@PathVariable String skuCode){
+        return inventoryService.findInventoryBySkuCode(skuCode);
+    }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
