@@ -1,4 +1,4 @@
-export type Prodcut = {
+export type Product = {
     id: string;
     name: string;
     skuCode: string;
