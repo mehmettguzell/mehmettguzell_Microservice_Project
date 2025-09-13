@@ -15,9 +15,8 @@ export type Inventory = {
 export type OrderStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
 
 export type OrderRequest = {
-  orderNumber: string;
   skuCode: string;
-  price: string;
+  price: number;
   quantity: number;
 };
 
@@ -25,7 +24,7 @@ export type OrderResponse = {
   id: number;
   orderNumber: string;
   skuCode: string;
-  price: string;
+  price: number;
   quantity: number;
   status: OrderStatus;
 };
