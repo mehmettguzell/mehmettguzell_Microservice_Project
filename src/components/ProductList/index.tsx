@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 interface Props {
   initialData: Product[];
 }
-export default function ProductsClient({ initialData }: Props) {
+export default function ProductList({ initialData }: Props) {
   const router = useRouter();
 
 return (

@@ -18,8 +18,6 @@ export const getProductById = (id: string) => fetcher<Product>(`${BASE}/${id}`, 
 
 export const searchProductsByName = (name: string) => fetcher<Product[]>(`${BASE}/search?name=${name}`, { cache: 'no-store' });
 
-export const getProductsByCategory = (category: string) => fetcher<Product[]>(`${BASE}/category?category=${category}`, { cache: 'no-store' });
-
 export const updateProduct = (id: string, product: Partial<Omit<Product, 'id'>>) => fetcher<Product>(`${BASE}/update/${id}`, {
     method: 'PUT',
     body: JSON.stringify(product),
