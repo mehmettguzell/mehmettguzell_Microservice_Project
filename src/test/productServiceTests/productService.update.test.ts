@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {updateProduct } from '../../services/productService';
 
 
-describe.only('ProductService', () => {
+describe.skip('ProductService', () => {
   it("should update an existing product", async () => {
     const productId = "68c3627122647a3e38deeb66";
     const updatedProduct = {

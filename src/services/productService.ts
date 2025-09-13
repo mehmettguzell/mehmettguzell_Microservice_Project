@@ -31,4 +31,4 @@ export const updateProduct = (id: string, product: Partial<Omit<Product, 'id'>>)
     }
 });
 
-export const deleteProduct = (id: string) => fetcher<{ message: string }>(`${BASE}?id=${id}`, {cache: 'no-store',method: 'DELETE',});
+export const deleteProduct = (id: string) => fetcher<{ message: string }>(`${BASE}?id=${id}`, {cache: 'no-store',method: 'DELETE'});
