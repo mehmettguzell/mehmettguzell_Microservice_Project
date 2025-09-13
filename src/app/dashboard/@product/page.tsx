@@ -5,6 +5,7 @@ import {getAllProducts, searchProductsByName}  from "@/services/productService";
 import ProductList from '@/components/ProductList';
 import ProductSearchBar from '@/components/ProductSearchBar';
 import { Product } from '@/types';
+import ProductCreateCard from '@/components/ProductCreateCard';
 
 
 export default  function ProductPage() {
@@ -29,6 +30,7 @@ export default  function ProductPage() {
 
       <ProductSearchBar value={searchQuery} onChange={setSearchQuery} />
       <ProductList initialData={products} />
+      <ProductCreateCard setProducts={setProducts} />
     </div>
   );
 }

@@ -5,7 +5,10 @@ import { createProduct } from '@/services/productService';
 import { isSkuCodeValid } from '@/services/inventoryService';
 import { useRouter } from "next/navigation";
 
-export default function ProductCreateCard() {
+interface Props {
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+}
+export default function ProductCreateCard({ setProducts }: Props) {
   const [name, setName] = useState('');
   const [skuCode, setSkuCode] = useState('');
   const [price, setPrice] = useState('');
@@ -31,6 +34,9 @@ export default function ProductCreateCard() {
           alert('inventory de böyle bir skuCode mevcut değil.');
           return;
         }
+
+        setProducts(prev => [...prev, response]);
+
         setName('');
         setSkuCode('');
         setPrice('');
@@ -42,9 +48,7 @@ export default function ProductCreateCard() {
         console.error('Ürün oluşturulurken bir hata oluştu:', error);
         alert('Ürün oluşturulurken bir hata oluştu.');
     }
-
   };
-
   return (
     <form
       onSubmit={handleSubmit}
