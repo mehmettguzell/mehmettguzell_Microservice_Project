@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ProductCard from '../ProductCard';
-import { Product } from '../../types';
+import { Product } from '../../../types';
 import { useRouter } from 'next/navigation';
 
 interface Props {

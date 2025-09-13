@@ -1,36 +1,14 @@
-"use client";
-
-import { use, useEffect, useState } from 'react';
-import {getAllProducts, searchProductsByName}  from "@/services/productService";
-import ProductList from '@/components/ProductList';
-import ProductSearchBar from '@/components/ProductSearchBar';
+import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types';
-import ProductCreateCard from '@/components/ProductCreateCard';
+import ProductBarWrapper from '@/components/ProductBarWrapper';
 
-
-export default  function ProductPage() {
-    const [searchQuery, setSearchQuery] = useState('');
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    getAllProducts().then(setProducts);
-  }, []);
-
-  useEffect(() => {
-    if (searchQuery === '') {
-      getAllProducts().then(setProducts);
-    }else {
-      searchProductsByName(searchQuery).then(setProducts);
-    }
-  }, [searchQuery]);
+export default async function ProductPage() {
+  const products: Product[] = await getAllProducts();
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
-
-      <ProductSearchBar value={searchQuery} onChange={setSearchQuery} />
-      <ProductList initialData={products} />
-      <ProductCreateCard setProducts={setProducts} />
+      <ProductBarWrapper initialProducts={products} />
     </div>
   );
 }
