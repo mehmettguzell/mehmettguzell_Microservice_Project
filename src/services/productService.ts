@@ -1,7 +1,7 @@
 import {fetcher} from '../lib/fetcher';
 import {Product} from '../types/index';
 
-const BASE = process.env.PRODUCT_SERVICE_URL;
+const BASE = "http://localhost:9000/api/product";
 
 export const createProduct = (product:Omit<Product,'id'>) => fetcher<Product>(`${BASE}`, {
     cache: 'no-store',
