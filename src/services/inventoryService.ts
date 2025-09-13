@@ -2,10 +2,7 @@ import { get } from 'http';
 import {fetcher} from '../lib/fetcher';
 import {Inventory} from '../types/index';
 
-const BASE =
-  process.env.NODE_ENV === 'test'
-    ? 'http://localhost:9000/api/inventory'
-    : '/api/inventory';
+const BASE = process.env.INVENTORY_SERVICE_URL;
 
 export const addInventory = (Inventory:Omit<Inventory, 'id'>) => fetcher<Inventory>(`${BASE}`, {
     cache: 'no-store',

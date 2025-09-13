@@ -1,10 +1,7 @@
 import {fetcher} from '../lib/fetcher';
 import {Product} from '../types/index';
 
-const BASE =
-  process.env.NODE_ENV === 'test'
-    ? 'http://localhost:9000/api/product'
-    : '/api/product';
+const BASE = process.env.PRODUCT_SERVICE_URL;
 
 export const createProduct = (product:Omit<Product,'id'>) => fetcher<Product>(`${BASE}`, {
     cache: 'no-store',
