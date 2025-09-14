@@ -1,8 +1,9 @@
 import {} from 'react';
 import {getProductById}  from "@/services/productService";
-import ProductIdCard from '@/components/ProductBarWrapper/ProductIdCard';
+import ProductIdCard from '@/components/ProductIdPage/ProductIdCard';
 import {getInventoryBySkuCode} from "@/services/inventoryService"
-import ProductBarWrapper from '@/components/ProductBarWrapper';
+import DeleteProductButton from '@/components/ProductIdPage/DeleteProductButton';
+
 
 interface Props {
     params: { id: string };
@@ -13,11 +14,12 @@ export default async function ProductIdPage({ params }: Props) {
 
     const product = await getProductById(productId);
     const inventory = await getInventoryBySkuCode(product.skuCode);
-
+    
    return (
     <div className="container mx-auto p-8">
         <h1 className="text-2xl font-bold mb-4">Product : {product.name}</h1>
         <ProductIdCard product={product} inventory={inventory} />
+        <DeleteProductButton productId={productId} />
     </div>
     );
 }
