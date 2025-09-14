@@ -1,7 +1,7 @@
 import { Inventory } from "@/types";
-import InventoryList from "./InventoryList";
+import InventoryList from "@/inventoryComponents/InventoryWrapper/InventoryList";
 import { use } from "react";
-import CreateInventoryCard from "../CreateInventoryCard";
+import CreateInventoryCard from "@/inventoryComponents/CreateInventoryCard";
 interface Props {
     initialInventory: Promise<Inventory[]>;
 };

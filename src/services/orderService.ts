@@ -1,5 +1,5 @@
-import {fetcher} from '../lib/fetcher';
-import {OrderRequest, OrderResponse, OrderStatus} from '../types/index';
+import {fetcher} from '@/lib/fetcher';
+import {OrderRequest, OrderResponse} from '@/types';
 
 const BASE = "http://localhost:9000/api/order";
 

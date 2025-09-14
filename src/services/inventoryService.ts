@@ -1,6 +1,6 @@
 import { get } from 'http';
-import {fetcher} from '../lib/fetcher';
-import {Inventory} from '../types/index';
+import {fetcher} from '@/lib/fetcher';
+import {Inventory} from '@/types';
 
 const BASE = "http://localhost:9000/api/inventory";
 

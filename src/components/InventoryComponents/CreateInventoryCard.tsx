@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import { Inventory } from '../../types';
-import {addInventory} from '../../services/inventoryService';
+import { Inventory } from '@/types';
+import {addInventory} from '@/services/inventoryService';
 import { useRouter } from 'next/navigation';
 
 

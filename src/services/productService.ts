@@ -1,5 +1,5 @@
-import {fetcher} from '../lib/fetcher';
-import {Product} from '../types/index';
+import {fetcher} from '@/lib/fetcher';
+import {Product} from "@/types";
 
 const BASE = "http://localhost:9000/api/product";
 

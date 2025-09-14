@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Inventory } from "@/types";
-import AddQuantitySection from "../AddQuantitySection";
-import {addStock, setQuantityZeroById} from "../../../services/inventoryService"
+import AddQuantitySection from "@/inventoryComponents/AddQuantitySection";
+import {addStock, setQuantityZeroById} from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
-import DeleteStocks from "../DeleteStocks";
+import DeleteStocks from "@/inventoryComponents/DeleteStocks";
 
 
 interface Props {

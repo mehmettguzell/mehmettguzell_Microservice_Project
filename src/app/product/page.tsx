@@ -1,6 +1,6 @@
 import { getAllProducts } from '@/services/productService';
 import { Product } from '@/types';
-import ProductBarWrapper from '@/components/ProductComponents/ProductBarWrapper';
+import ProductBarWrapper from '@/productComponents/ProductBarWrapper';
 import { Suspense } from 'react';
 
 export default async function ProductPage() {

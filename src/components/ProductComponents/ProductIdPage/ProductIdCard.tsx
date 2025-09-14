@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Inventory, Product } from '../../../types';
+import { Inventory, Product } from  '@/types';
 
 interface Props {
   product: Product;
