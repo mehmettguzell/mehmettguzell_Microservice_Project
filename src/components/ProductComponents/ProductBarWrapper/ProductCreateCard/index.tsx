@@ -1,6 +1,6 @@
 'use client';
 import React, { startTransition, useState } from 'react';
-import { Product } from '../../../types';
+import { Product } from '../../../../types';
 import { createProduct } from '@/services/productService';
 import { isSkuCodeValid } from '@/services/inventoryService';
 import { useRouter } from "next/navigation";

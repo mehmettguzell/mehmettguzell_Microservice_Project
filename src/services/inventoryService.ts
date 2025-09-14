@@ -21,7 +21,7 @@ export const isSkuCodeValid = (skuCode: string) => fetcher<boolean>(`${BASE}/val
 
 export const isInStock = (skuCode:string, quantity:number) => fetcher<boolean>(`${BASE}/validate?skuCode=${skuCode}&quantity=${quantity}`, {cache:'no-store'});
 
-export const addStock = (id: number, quantity: number) =>
+export const addStock = (id: string, quantity: number) =>
   fetcher<Inventory>(`${BASE}/addStock/${id}`, {
     cache: 'no-store',
     method: "PATCH",
@@ -31,7 +31,6 @@ export const addStock = (id: number, quantity: number) =>
     body: JSON.stringify({ quantity }),
   });
 
-
 export const setQuantityZeroBySkuCode = (skuCode: string) => fetcher<Inventory>(`${BASE}?skuCode=${skuCode}`, {cache:'no-store', method:'DELETE' })
 
-export const setQuantityZeroById = (id:number) => fetcher<Inventory>(`${BASE}?id=${id}`, {cache:'no-store', method:'DELETE' })
+export const setQuantityZeroById = (id:string) => fetcher<Inventory>(`${BASE}?id=${id}`, {cache:'no-store', method:'DELETE' })

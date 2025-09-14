@@ -2,9 +2,9 @@
 
 import { use, useState } from 'react';
 import { searchProductsByName, getAllProducts } from '@/services/productService';
-import ProductSearchBar from '@/components/ProductBarWrapper/ProductSearchBar';
-import ProductList from '@/components/ProductBarWrapper/ProductList';
-import ProductCreateCard from '@/components/ProductBarWrapper/ProductCreateCard';
+import ProductSearchBar from '@/components/ProductComponents/ProductBarWrapper/ProductSearchBar';
+import ProductList from '@/components/ProductComponents/ProductBarWrapper/ProductList';
+import ProductCreateCard from '@/components/ProductComponents/ProductBarWrapper/ProductCreateCard';
 import { Product } from '@/types';
 
 interface Props {

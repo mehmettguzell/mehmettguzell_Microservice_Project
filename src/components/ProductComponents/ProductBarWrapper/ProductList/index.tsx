@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ProductCard from '../ProductCard';
-import { Product } from '../../../types';
+import { Product } from '../../../../types';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 export default function ProductList({ initialData }: Props) {
   const router = useRouter();
 
-return (
+return (  
     <div className="grid grid-cols-3 gap-4">
       {initialData.map(product => (
         <div
