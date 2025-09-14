@@ -4,7 +4,11 @@ interface Props {
   onAdd: (amount: number) => void;
 }
 
-export default function AddQuantitySection({ amount, setAmount, onAdd }: Props) {
+export default function AddQuantitySection({
+  amount,
+  setAmount,
+  onAdd,
+}: Props) {
   return (
     <div className="mt-4 flex gap-2">
       <input

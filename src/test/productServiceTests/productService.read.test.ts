@@ -1,10 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { getAllProducts, getProductById, searchProductsByName, createProduct, deleteProduct } from '../../services/productService';
+import { describe, it, expect } from "vitest";
+import {
+  getAllProducts,
+  getProductById,
+  searchProductsByName,
+  createProduct,
+  deleteProduct,
+} from "../../services/productService";
 
-
-describe.skip('ProductService', () => {
-  
-  it('should fetch all products', async () => {
+describe.skip("ProductService", () => {
+  it("should fetch all products", async () => {
     const products = await getAllProducts();
     expect(Array.isArray(products)).toBe(true);
     expect(products.length).toBeGreaterThan(0);
@@ -14,12 +18,12 @@ describe.skip('ProductService', () => {
     const existingProductId = "68c35fac015067e3777e8a7b";
     const product = await getProductById(existingProductId);
 
-    expect(product).toHaveProperty('id', existingProductId);
-    expect(product).toHaveProperty('name');
-    expect(product).toHaveProperty('skuCode');
-    expect(product).toHaveProperty('description');
-    expect(product).toHaveProperty('price');
-  }); 
+    expect(product).toHaveProperty("id", existingProductId);
+    expect(product).toHaveProperty("name");
+    expect(product).toHaveProperty("skuCode");
+    expect(product).toHaveProperty("description");
+    expect(product).toHaveProperty("price");
+  });
 
   it("should return error for non-existing product ID", async () => {
     try {
@@ -35,9 +39,8 @@ describe.skip('ProductService', () => {
 
     expect(Array.isArray(products)).toBe(true);
     expect(products.length).toBeGreaterThan(0);
-    products.forEach(product => {
+    products.forEach((product) => {
       expect(product.name).toContain(searchTerm);
     });
   });
-
-  });
+});

@@ -1,6 +1,6 @@
 "use client";
-import React from 'react';
-import { Inventory, Product } from  '@/types';
+import React from "react";
+import { Inventory, Product } from "@/types";
 
 interface Props {
   product: Product;
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function ProductIdCard({ product, inventory }: Props) {
-    const skuCode = product.skuCode;
+  const skuCode = product.skuCode;
 
   return (
     <div className="border p-4 rounded shadow">

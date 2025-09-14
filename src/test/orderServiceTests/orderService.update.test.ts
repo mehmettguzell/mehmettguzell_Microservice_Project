@@ -1,15 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import { updateOrder, confirmOrder } from '../../services/orderService';
-import {OrderRequest, OrderResponse} from '../../types/index';
+import { describe, it, expect } from "vitest";
+import { updateOrder, confirmOrder } from "../../services/orderService";
+import { OrderRequest, OrderResponse } from "../../types/index";
 
-
-
-describe.skip('Order Service - Update Order', () => {
-    it('should update an existing order', async () => {
+describe.skip("Order Service - Update Order", () => {
+  it("should update an existing order", async () => {
     const orderId = 5;
     const payload: OrderRequest = {
-      skuCode: 'pixel_7',
-      price: 2622,            
+      skuCode: "pixel_7",
+      price: 2622,
       quantity: 121,
     };
 
@@ -21,11 +19,10 @@ describe.skip('Order Service - Update Order', () => {
     expect(updatedOrder.quantity).toBe(payload.quantity);
   });
 
-  it('should confirm an existing order', async () => {
+  it("should confirm an existing order", async () => {
     const orderId = 13;
     const confirmedOrder: OrderResponse = await confirmOrder(orderId);
     expect(confirmedOrder.id).toBe(orderId);
-    expect(confirmedOrder.status).toBe('CONFIRMED');
+    expect(confirmedOrder.status).toBe("CONFIRMED");
   });
-
 });

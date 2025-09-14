@@ -1,52 +1,52 @@
-'use client';
-import React, { startTransition, useState } from 'react';
-import { Product } from '@/types';
-import { createProduct } from '@/services/productService';
-import { isSkuCodeValid } from '@/services/inventoryService';
+"use client";
+import React, { startTransition, useState } from "react";
+import { Product } from "@/types";
+import { createProduct } from "@/services/productService";
+import { isSkuCodeValid } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 
 interface Props {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 }
 export default function ProductCreateCard({ setProducts }: Props) {
-  const [name, setName] = useState('');
-  const [skuCode, setSkuCode] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [skuCode, setSkuCode] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try{
-        const newProductData: Omit<Product, 'id'> = {
-          name,
-          skuCode,
-          price: parseFloat(price),
-          description,
-        };
-        
-        let response;
-        if(await isSkuCodeValid(skuCode)){
-          response = await createProduct(newProductData);
-        }else{
-          alert('inventory de böyle bir skuCode mevcut değil.');
-          return;
-        }
+    try {
+      const newProductData: Omit<Product, "id"> = {
+        name,
+        skuCode,
+        price: parseFloat(price),
+        description,
+      };
 
-        setProducts(prev => [...prev, response]);
+      let response;
+      if (await isSkuCodeValid(skuCode)) {
+        response = await createProduct(newProductData);
+      } else {
+        alert("inventory de böyle bir skuCode mevcut değil.");
+        return;
+      }
 
-        setName('');
-        setSkuCode('');
-        setPrice('');
-        setDescription('');
+      setProducts((prev) => [...prev, response]);
 
-        alert('Ürün başarıyla oluşturuldu! ID: ' + response.id);
-        router.refresh();
+      setName("");
+      setSkuCode("");
+      setPrice("");
+      setDescription("");
+
+      alert("Ürün başarıyla oluşturuldu! ID: " + response.id);
+      router.refresh();
     } catch (error) {
-        console.error('Ürün oluşturulurken bir hata oluştu:', error);
-        alert('Ürün oluşturulurken bir hata oluştu.');
+      console.error("Ürün oluşturulurken bir hata oluştu:", error);
+      alert("Ürün oluşturulurken bir hata oluştu.");
     }
   };
   return (

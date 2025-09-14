@@ -1,18 +1,18 @@
 export type Product = {
-    id: string;
-    name: string;
-    skuCode: string;
-    description?: string;
-    price: number;
-}
+  id: string;
+  name: string;
+  skuCode: string;
+  description?: string;
+  price: number;
+};
 
 export type Inventory = {
-    id: string;
-    skuCode: string;
-    quantity: number;
-}
+  id: string;
+  skuCode: string;
+  quantity: number;
+};
 
-export type OrderStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';
+export type OrderStatus = "PENDING" | "COMPLETED" | "CANCELLED";
 
 export type OrderRequest = {
   skuCode: string;

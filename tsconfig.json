@@ -28,8 +28,7 @@
       "@/services/*": ["./src/services/*"],
       "@/components/*": ["./src/components/*"],
       "@/productComponents/*": ["./src/components/ProductComponents/*"],
-      "@/inventoryComponents/*": ["./src/components/InventoryComponents/*"],
-      
+      "@/inventoryComponents/*": ["./src/components/InventoryComponents/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
