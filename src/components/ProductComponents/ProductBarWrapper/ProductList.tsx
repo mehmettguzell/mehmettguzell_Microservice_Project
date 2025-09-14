@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import ProductCard from '../ProductCard';
-import { Product } from '../../../../types';
+import ProductCard from './ProductCard';
+import { Product } from '../../../types';
 import { useRouter } from 'next/navigation';
 
 interface Props {

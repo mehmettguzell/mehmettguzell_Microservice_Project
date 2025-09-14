@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import { Inventory } from '../../../types';
-import {addInventory} from '../../../services/inventoryService';
+import { Inventory } from '../../types';
+import {addInventory} from '../../services/inventoryService';
 import { useRouter } from 'next/navigation';
 
 
@@ -10,6 +10,12 @@ export default function CreateInventoryCard() {
     const [quantity, setQuantity] = useState(0);
 
     const router = useRouter();
+
+    const resetFrom = () => {
+      setSkuCode('');
+      setQuantity(0);
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       try{
@@ -18,8 +24,7 @@ export default function CreateInventoryCard() {
           quantity,
         };
         await addInventory(newInventoryData);
-        setSkuCode('');
-        setQuantity(0);
+        resetFrom();
         router.refresh();
 
     }catch(error){
@@ -40,6 +45,8 @@ export default function CreateInventoryCard() {
           </label>
           <input
             type="text"
+            value={skuCode}
+            onChange={(e) => setSkuCode(e.target.value)}
             className="w-full border border-gray-300 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 placeholder-gray-400"
             placeholder="Enter SKU Code"
           />
@@ -49,8 +56,10 @@ export default function CreateInventoryCard() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Quantity
           </label>
-          <input
-            type="number"
+          <input  
+            type="number" 
+            value={quantity}
+            onChange={(e) => setQuantity(Number(e.target.value))}
             className="w-full border border-gray-300 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 placeholder-gray-400"
             placeholder="Enter Quantity"
           />

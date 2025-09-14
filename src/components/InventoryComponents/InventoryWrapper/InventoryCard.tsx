@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Inventory } from "@/types";
-import AddQuantitySection from "../../AddQuantitySection";
-import {addStock, setQuantityZeroById} from "../../../../services/inventoryService"
+import AddQuantitySection from "../AddQuantitySection";
+import {addStock, setQuantityZeroById} from "../../../services/inventoryService"
 import { useRouter } from "next/navigation";
-import DeleteStocks from "../../DeleteStocks";
+import DeleteStocks from "../DeleteStocks";
 
 
 interface Props {
@@ -17,11 +17,16 @@ export default function InventoryCard({ inventory }: Props) {
 
   const router = useRouter();
 
+  const deleteState = () =>{
+      setAmount(0);
+  }
+
   const handleAddStock = async (amount: number) => {
     if (amount <= 0) return;
     try{
       await addStock(inventory.id, amount)
       router.refresh();
+      deleteState();
     }catch(error){
       setError("Failed to add stock. Please try again.");
       return;
