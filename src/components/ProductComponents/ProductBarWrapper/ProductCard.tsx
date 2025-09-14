@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { Product } from '@/types';
+import OrderButton from "./OrderButton";
 
 interface Props {
   product: Product;
@@ -13,6 +14,7 @@ export default function ProductCard({ product }: Props) {
       <p>SKU: {product.skuCode}</p>
       <p>Fiyat: {product.price} ₺</p>
       <p>Açıklama: {product.description}</p>
+      <OrderButton product={product} />
     </div>
   );
 }

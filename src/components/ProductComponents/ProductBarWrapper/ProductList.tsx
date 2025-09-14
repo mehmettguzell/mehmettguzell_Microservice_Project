@@ -4,6 +4,7 @@ import React from 'react';
 import ProductCard from '@/components/ProductComponents/ProductBarWrapper/ProductCard';
 import { Product } from '@/types';
 import { useRouter } from 'next/navigation';
+import OrderButton from './OrderButton';
 
 interface Props {
   initialData: Product[];
