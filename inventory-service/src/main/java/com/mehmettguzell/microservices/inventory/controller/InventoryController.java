@@ -1,8 +1,8 @@
 package com.mehmettguzell.microservices.inventory.controller;
 
+import com.mehmettguzell.microservices.inventory.dto.ApiResponse;
 import com.mehmettguzell.microservices.inventory.dto.InventoryRequest;
 import com.mehmettguzell.microservices.inventory.dto.InventoryResponse;
-import com.mehmettguzell.microservices.inventory.modul.Inventory;
 import com.mehmettguzell.microservices.inventory.service.InventoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/inventory")
@@ -21,52 +20,64 @@ public class InventoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public InventoryResponse addInventory(@Valid @RequestBody InventoryRequest inventoryRequest){
-        return inventoryService.createInventory(inventoryRequest);
+    public ApiResponse<InventoryResponse> addInventory(@Valid @RequestBody InventoryRequest inventoryRequest){
+        return new ApiResponse<>("Inventory created successfully" ,inventoryService.createInventory(inventoryRequest));
     }
 
     @GetMapping("/{skuCode}")
     @ResponseStatus(HttpStatus.OK)
-    public InventoryResponse findInventoryBySkuCode(@PathVariable String skuCode){
-        return inventoryService.findInventoryBySkuCode(skuCode);
+    public ApiResponse<Boolean> findInventoryBySkuCode(@PathVariable String skuCode){
+        boolean isValid = inventoryService.doesSkuCodeExist(skuCode);
+        return new ApiResponse<>("SKU validation result", isValid);
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<InventoryResponse> getAllInventory() {
-        return inventoryService.getAllInventories();
+    public ApiResponse<List<InventoryResponse>> getAllInventory() {
+        List<InventoryResponse> inventories = inventoryService.getAllInventories();
+        String message = inventories.isEmpty() ? "No inventory found" : "Inventory list retrieved successfully";
+        return new ApiResponse<>(message, inventories);
     }
 
     @GetMapping("/validate")
     @ResponseStatus(HttpStatus.OK)
-    public boolean isSkuCodeValid(@Valid @RequestParam("skuCode") String skuCode){
-        return inventoryService.isSkuCodeValid(skuCode);
+    public ApiResponse<Boolean> isSkuCodeValid(@Valid @RequestParam("skuCode") String skuCode) {
+        boolean isValid = inventoryService.doesSkuCodeExist(skuCode);
+        String message = isValid ? "SKU code is valid" : "SKU code is invalid";
+        return new ApiResponse<>(message, isValid);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean isInStock(@RequestParam String skuCode, @RequestParam Integer quantity) {
-        return inventoryService.isInStock(skuCode, quantity);
+    public ApiResponse<Boolean> isInStock(@RequestParam String skuCode, @RequestParam Integer quantity) {
+        boolean inStock = inventoryService.isInStock(skuCode, quantity);
+        String message = inStock
+                ? "Requested quantity is in stock"
+                : "Requested quantity is not in stock";
+        return new ApiResponse<>(message, inStock);
     }
 
     @PatchMapping("/addStock/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public InventoryResponse addStock(@PathVariable Long id,
-                                      @Valid @RequestBody InventoryRequest inventoryRequest) {
-        return inventoryService.addStock(id, inventoryRequest);
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<InventoryResponse> addStock(@PathVariable Long id,
+                                                   @Valid @RequestBody InventoryRequest inventoryRequest) {
+        InventoryResponse updatedInventory = inventoryService.addStock(id, inventoryRequest);
+        return new ApiResponse<>("Stock updated successfully", updatedInventory);
     }
 
-    @DeleteMapping()
-    public Map<String, String> setQuantityZero(@RequestParam(required = false) Long id,
-                                               @RequestParam(required = false) String skuCode) {
-        String message;
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<InventoryResponse> setQuantityZero(@RequestParam(required = false) Long id,
+                                                          @RequestParam(required = false) String skuCode) {
+        InventoryResponse response;
         if (id != null) {
-            message = inventoryService.setQuantityZero(id);
+            response = inventoryService.resetQuantity(id);
         } else if (skuCode != null) {
-            message =inventoryService.setQuantityZero(skuCode);
+            response = inventoryService.resetQuantity(skuCode);
         } else {
             throw new IllegalArgumentException("Either id or skuCode must be provided");
         }
-        return Map.of("message", message);
+        return new ApiResponse<>("Inventory quantity set to zero", response);
     }
+
 }

@@ -2,100 +2,128 @@ package com.mehmettguzell.microservices.inventory.service;
 
 import com.mehmettguzell.microservices.inventory.dto.InventoryRequest;
 import com.mehmettguzell.microservices.inventory.dto.InventoryResponse;
+import com.mehmettguzell.microservices.inventory.exception.InvalidInventoryRequestException;
 import com.mehmettguzell.microservices.inventory.exception.InventoryNotFoundException;
-import com.mehmettguzell.microservices.inventory.mapper.inventoryMapper;
+import com.mehmettguzell.microservices.inventory.mapper.InventoryMapper;
 import com.mehmettguzell.microservices.inventory.modul.Inventory;
 import com.mehmettguzell.microservices.inventory.repository.InventoryRepository;
+import com.mehmettguzell.microservices.inventory.validation.InventoryValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
-    private final inventoryMapper inventoryMapper;
+    private final InventoryMapper inventoryMapper;
+    private final InventoryValidator inventoryValidator;
 
 
     public InventoryResponse createInventory(InventoryRequest request) {
-        Inventory inventory = inventoryMapper.toEntity(request);
-        Inventory savedInventory = saveAndLogInventory(inventory, "Created inventory: ");
-        return inventoryMapper.toResponse(savedInventory);
+        inventoryValidator.validateInventoryRequest(request.skuCode(), request.quantity());
+        if (inventoryRepository.existsBySkuCode(request.skuCode())) {
+            throw new InvalidInventoryRequestException("SKU code already exists");
+        }
+        Inventory inventory = mapToEntity(request);
+        return saveAndLog(inventory, "Created inventory:");
     }
 
     public InventoryResponse findInventoryBySkuCode(String skuCode) {
-        Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
-        return inventoryMapper.toResponse(inventory);
+        inventoryValidator.validateInventoryRequest(skuCode);
+        Inventory inventory = getInventoryBySkuCode(skuCode);
+        return mapToResponse(inventory);
     }
 
     public List<InventoryResponse> getAllInventories() {
-        return inventoryRepository.findAll()
-                .stream()
+        return inventoryRepository.findAll().stream()
                 .map(inventoryMapper::toResponse)
                 .toList();
     }
 
-    public boolean isSkuCodeValid(@Valid String skuCode) {
+    public boolean doesSkuCodeExist(@Valid String skuCode) {
+        inventoryValidator.validateInventoryRequest(skuCode);
         return inventoryRepository.existsBySkuCode(skuCode);
     }
 
     public boolean isInStock(String skuCode, Integer quantity) {
+        inventoryValidator.validateInventoryRequest(skuCode, quantity);
         return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
     }
 
-    public String setQuantityZero(Long id) {
-        Inventory inventory = findInventoryById(id);
-        setQuantityZero(inventory);
-        return "Inventory quantity set 0 for : " + inventory.getSkuCode();
-
-    }
-
-    public String setQuantityZero(String skuCode) {
-        Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
-        setQuantityZero(inventory);
-        return "Inventory quantity set 0 for : " + inventory.getSkuCode();
-    }
-
-    private void setQuantityZero(Inventory inventory) {
-        inventory.setQuantity(0);
-        saveAndLogInventory(inventory, "Inventory Quantity: 0: ");
-    }
-
     public InventoryResponse addStock(Long id, InventoryRequest request) {
-        Inventory inventory = findInventoryById(id);
-        inventory.setQuantity(inventory.getQuantity() + request.quantity());
-        Inventory updatedInventory = saveAndLogInventory(inventory, "Stock added to inventory: ");
-        return inventoryMapper.toResponse(updatedInventory);
+        inventoryValidator.validateInventoryRequest(request.skuCode(), request.quantity());
+        Inventory inventory = getInventoryById(id);
+        increaseInventoryQuantity(inventory, request.quantity());
+        return saveAndLog(inventory, "Stock added to inventory:");
     }
 
+    public InventoryResponse resetQuantity(Long id) {
+        Inventory inventory = getInventoryById(id);
+        ensureQuantityIsNotAlreadyZero(inventory);
+        inventory.setQuantity(0);
+        return saveAndLog(inventory, "Inventory quantity reset to 0:");
+    }
 
-    private Inventory findInventoryById(Long id) {
+    public InventoryResponse resetQuantity(String skuCode) {
+        inventoryValidator.validateInventoryRequest(skuCode);
+        Inventory inventory = getInventoryBySkuCode(skuCode);
+        ensureQuantityIsNotAlreadyZero(inventory);
+        inventory.setQuantity(0);
+        return saveAndLog(inventory, "Inventory quantity reset to 0:");
+    }
+
+    public void deleteInventory(Long id) {
+        Inventory inventory = getInventoryById(id);
+        inventoryRepository.delete(inventory);
+        logInventory("Deleted inventory:", inventory);
+    }
+
+    // ===========================
+    // PRIVATE HELPERS
+    // ===========================
+
+    private Inventory mapToEntity(InventoryRequest request) {
+        return inventoryMapper.toEntity(request);
+    }
+
+    private InventoryResponse mapToResponse(Inventory inventory) {
+        return inventoryMapper.toResponse(inventory);
+    }
+
+    private InventoryResponse saveAndLog(Inventory inventory, String message) {
+        Inventory saved = inventoryRepository.save(inventory);
+        logInventory(message, saved);
+        return mapToResponse(saved);
+    }
+
+    private Inventory getInventoryBySkuCode(String skuCode) {
+        Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
+        inventoryValidator.validateInventoryExists(inventory, skuCode);
+        return inventory;
+    }
+
+    private Inventory getInventoryById(Long id) {
         return inventoryRepository.findById(id)
                 .orElseThrow(() -> new InventoryNotFoundException(id));
     }
 
-    private Inventory saveAndLogInventory(Inventory inventory, String message) {
-        Inventory savedInventory = inventoryRepository.save(inventory);
-        logInventory(message, savedInventory);
-        return savedInventory;
+    private void increaseInventoryQuantity(Inventory inventory, int quantityToAdd) {
+        inventory.setQuantity(inventory.getQuantity() + quantityToAdd);
     }
 
-    private void deleteAndLogInventory(Inventory inventory, String message) {
-        inventoryRepository.delete(inventory);
-        logInventory(message, inventory);
+    private void ensureQuantityIsNotAlreadyZero(Inventory inventory) {
+        if (inventory.getQuantity() == 0) {
+            throw new InvalidInventoryRequestException("Inventory quantity is already 0");
+        }
     }
 
     private void logInventory(String message, Inventory inventory) {
         log.info("{} {}", message, inventory);
     }
-
-
 }

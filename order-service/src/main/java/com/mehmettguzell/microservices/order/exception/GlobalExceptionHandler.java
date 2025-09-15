@@ -10,35 +10,51 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private ErrorResponse buildError(HttpStatus status, String code, String message) {
+        return new ErrorResponse(
+                java.time.ZonedDateTime.now().toString(),
+                status.value(),
+                status.getReasonPhrase(),
+                code,
+                message
+        );
+    }
+
     @ExceptionHandler(ProductOutOfStockException.class)
-    public ResponseEntity<ErrorResponse> handleOutOfStock(ProductOutOfStockException ex){
-        ErrorResponse errorResponse = new ErrorResponse("Product is out of stock", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    public ResponseEntity<ErrorResponse> handleOutOfStock(ProductOutOfStockException ex) {
+        return new ResponseEntity<>(buildError(HttpStatus.CONFLICT, "PRODUCT_OUT_OF_STOCK", ex.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleOrderNotFound(OrderNotFoundException ex){
-        ErrorResponse errorResponse = new ErrorResponse("Order not found", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleOrderNotFound(OrderNotFoundException ex) {
+        return new ResponseEntity<>(
+                buildError(HttpStatus.NOT_FOUND, "ORDER_NOT_FOUND", ex.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
     }
 
     @ExceptionHandler(InvalidSkuCodeException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidSkuCodeException(InvalidSkuCodeException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Invalid Sku Code", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleInvalidSkuCode(InvalidSkuCodeException ex) {
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, "INVALID_SKU", ex.getMessage()),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex){
-        ErrorResponse errorResponse = new ErrorResponse("Validation Failed", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
+        String msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return new ResponseEntity<>(
+                buildError(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", msg),
+                HttpStatus.BAD_REQUEST
+        );
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex){
-        ErrorResponse errorResponse = new ErrorResponse("Internal Server Error", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        return new ResponseEntity<>(
+                buildError(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "An unexpected error occurred"),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
-
-
 }

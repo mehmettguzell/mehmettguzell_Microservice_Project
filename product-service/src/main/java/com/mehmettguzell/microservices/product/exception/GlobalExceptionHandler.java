@@ -11,27 +11,33 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    public ErrorResponse buildError(HttpStatus status, String code, String message ) {
+        return new ErrorResponse(
+                java.time.ZonedDateTime.now().toString(),
+                status.value(),
+                status.getReasonPhrase(),
+                code,
+                message
+        );
+    }
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Product Not Found", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(buildError(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", ex.getMessage()), HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(InvalidSkuCodeException.class)
     public ResponseEntity<ErrorResponse> handleInvalidSkuCodeException(InvalidSkuCodeException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Invalid Sku Code", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(HttpStatus.BAD_REQUEST, "INVALID_SKU_CODE", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Validation Failed", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(buildError(HttpStatus.BAD_REQUEST, "INVALID_ARGUMENTS", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Error", ex.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(buildError(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "An unexpected error occurred"), HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 
 }
