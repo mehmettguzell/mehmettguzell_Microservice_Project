@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -45,13 +46,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public ProductResponse updateProduct(@PathVariable String id,
                                          @Valid @RequestBody ProductRequest productRequest){
-
         return productService.updateProduct(id, productRequest);
     }
-
     @DeleteMapping()
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProduct(@RequestParam String id){
-        productService.deleteProduct(id);
+    public Map<String, String> deleteProduct(@RequestParam String id){
+        String message = productService.deleteProduct(id);
+        return Map.of("message", message);
     }
+
 }

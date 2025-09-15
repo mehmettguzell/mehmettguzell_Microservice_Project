@@ -3,6 +3,7 @@ package com.mehmettguzell.microservices.order.service;
 import com.mehmettguzell.microservices.order.client.InventoryClient;
 import com.mehmettguzell.microservices.order.dto.OrderRequest;
 import com.mehmettguzell.microservices.order.dto.OrderResponse;
+import com.mehmettguzell.microservices.order.exception.InvalidSkuCodeException;
 import com.mehmettguzell.microservices.order.exception.OrderNotFoundException;
 import com.mehmettguzell.microservices.order.exception.ProductOutOfStockException;
 import com.mehmettguzell.microservices.order.mapper.OrderMapper;
@@ -47,6 +48,7 @@ public class OrderService {
 
     @Transactional
     public OrderResponse updateOrder(Long id, OrderRequest orderRequest) {
+        validateSkuCode(orderRequest.skuCode());
         Order order = fetchOrder(id);
         applyRequestToOrder(order, orderRequest);
         persistOrder(order);
@@ -54,6 +56,11 @@ public class OrderService {
         return toResponse(order);
     }
 
+    private void validateSkuCode(String skuCode) {
+        if (!inventoryClient.isSkuCodeValid(skuCode)) {
+            throw new InvalidSkuCodeException(skuCode);
+        }
+    }
     public OrderResponse confirmOrder(Long orderId) {
         Order order = fetchOrder(orderId);
         order.confirm();
@@ -62,9 +69,11 @@ public class OrderService {
     }
 
     @Transactional
-    public void cancelOrder(Long id) {
+    public String cancelOrder(Long id) {
         Order order = fetchOrder(id);
+        if(order.getStatus().equals(OrderStatus.CANCELLED)) {return "Already Cancelled";}
         order.setStatus(OrderStatus.CANCELLED);
+        return "Order with id " + id + " Canceled successfully";
     }
 
     private Order fetchOrder(Long id) {

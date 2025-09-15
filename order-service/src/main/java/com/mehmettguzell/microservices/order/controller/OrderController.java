@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -49,8 +50,8 @@ public class OrderController {
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteOrder(@RequestParam Long id) {
-        orderService.cancelOrder(id);
+    public Map<String,String> deleteOrder(@RequestParam Long id) {
+        String message = orderService.cancelOrder(id);
+        return Map.of("message", message);
     }
 }

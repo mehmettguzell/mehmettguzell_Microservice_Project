@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/inventory")
@@ -56,15 +57,16 @@ public class InventoryController {
     }
 
     @DeleteMapping()
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setQuantityZero(@RequestParam(required = false) Long id,
-                                @RequestParam(required = false) String skuCode) {
+    public Map<String, String> setQuantityZero(@RequestParam(required = false) Long id,
+                                               @RequestParam(required = false) String skuCode) {
+        String message;
         if (id != null) {
-            inventoryService.setQuantityZero(id);
+            message = inventoryService.setQuantityZero(id);
         } else if (skuCode != null) {
-            inventoryService.setQuantityZero(skuCode);
+            message =inventoryService.setQuantityZero(skuCode);
         } else {
             throw new IllegalArgumentException("Either id or skuCode must be provided");
         }
+        return Map.of("message", message);
     }
 }

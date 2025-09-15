@@ -51,14 +51,17 @@ public class InventoryService {
         return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
     }
 
-    public void setQuantityZero(Long id) {
+    public String setQuantityZero(Long id) {
         Inventory inventory = findInventoryById(id);
         setQuantityZero(inventory);
+        return "Inventory quantity set 0 for : " + inventory.getSkuCode();
+
     }
 
-    public void setQuantityZero(String skuCode) {
+    public String setQuantityZero(String skuCode) {
         Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
         setQuantityZero(inventory);
+        return "Inventory quantity set 0 for : " + inventory.getSkuCode();
     }
 
     private void setQuantityZero(Inventory inventory) {

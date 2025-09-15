@@ -22,6 +22,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InvalidSkuCodeException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSkuCodeException(InvalidSkuCodeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Invalid Sku Code", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex){

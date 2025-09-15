@@ -54,12 +54,13 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(String id) {
+    public String deleteProduct(String id) {
         Product product = getProductEntityOrThrow(id);
         if (product.getSkuCode() != null) {
             inventoryQuantityZero(product.getSkuCode());
         }
         deleteAndLogProduct(product);
+        return "Product Deleted: " + product.getId() ;
     }
 
     private void validateSkuCode(String skuCode) {
