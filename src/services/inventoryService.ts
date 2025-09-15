@@ -1,6 +1,6 @@
 import { get } from "http";
 import { fetcher } from "../lib/fetcher";
-import { Inventory } from "../types";
+import { ApiResponse, Inventory } from "../types";
 
 const BASE = "http://localhost:9000/api/inventory";
 
@@ -14,24 +14,31 @@ export const addInventory = (Inventory: Omit<Inventory, "id">) =>
     },
   });
 
-export const getAllInventory = () =>
-  fetcher<Inventory[]>(`${BASE}/all`, { cache: "no-store" });
+export const getAllInventory = async () => {
+  const response = await fetcher<ApiResponse<Inventory[]>>(`${BASE}/all`, {
+    cache: "no-store",
+  });
+  return response.data;
+};
 
 export const getInventoryBySkuCode = (skuCode: string) =>
-  fetcher<Inventory>(`${BASE}/${skuCode}`, { cache: "no-store" });
+  fetcher<ApiResponse<Inventory>>(`${BASE}/${skuCode}`, { cache: "no-store" });
 
 export const isSkuCodeValid = (skuCode: string) =>
-  fetcher<boolean>(`${BASE}/validate?skuCode=${skuCode}`, {
+  fetcher<ApiResponse<boolean>>(`${BASE}/validate?skuCode=${skuCode}`, {
     cache: "no-store",
   });
 
 export const isInStock = (skuCode: string, quantity: number) =>
-  fetcher<boolean>(`${BASE}/validate?skuCode=${skuCode}&quantity=${quantity}`, {
-    cache: "no-store",
-  });
+  fetcher<ApiResponse<boolean>>(
+    `${BASE}/validate?skuCode=${skuCode}&quantity=${quantity}`,
+    {
+      cache: "no-store",
+    }
+  );
 
 export const addStock = (id: string, quantity: number) =>
-  fetcher<Inventory>(`${BASE}/addStock/${id}`, {
+  fetcher<ApiResponse<Inventory>>(`${BASE}/addStock/${id}`, {
     cache: "no-store",
     method: "PATCH",
     headers: {
@@ -41,13 +48,13 @@ export const addStock = (id: string, quantity: number) =>
   });
 
 export const setQuantityZeroBySkuCode = (skuCode: string) =>
-  fetcher<Inventory>(`${BASE}?skuCode=${skuCode}`, {
+  fetcher<ApiResponse<Inventory>>(`${BASE}?skuCode=${skuCode}`, {
     cache: "no-store",
     method: "DELETE",
   });
 
 export const setQuantityZeroById = (id: string) =>
-  fetcher<Inventory>(`${BASE}?id=${id}`, {
+  fetcher<ApiResponse<Inventory>>(`${BASE}?id=${id}`, {
     cache: "no-store",
     method: "DELETE",
   });

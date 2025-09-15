@@ -3,7 +3,7 @@ import { getAllInventory } from "@/services/inventoryService";
 import InventoryBarWrapper from "@/components/InventoryComponents/InventoryWrapper/index";
 
 export default async function InventoryPage() {
-  const inventoryItems = getAllInventory();
+  const inventoryItems = await getAllInventory();
 
   return (
     <div className="container mx-auto p-4">

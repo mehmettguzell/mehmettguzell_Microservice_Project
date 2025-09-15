@@ -17,6 +17,10 @@ export default function CreateInventoryCard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!skuCode || quantity <= 0) {
+      alert("Please provide valid SKU Code and Quantity.");
+      return;
+    }
     try {
       const newInventoryData: Omit<Inventory, "id"> = {
         skuCode,
