@@ -1,4 +1,4 @@
-import { Inventory } from "@/types";
+import { Inventory } from "@/types/Inventory";
 import InventoryList from "@/inventoryComponents/InventoryWrapper/InventoryList";
 import { use } from "react";
 import CreateInventoryCard from "@/inventoryComponents/CreateInventoryCard";

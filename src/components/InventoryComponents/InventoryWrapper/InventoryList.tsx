@@ -1,4 +1,4 @@
-import { Inventory } from "@/types";
+import { Inventory } from "@/types/Inventory";
 import InventoryCard from "@/inventoryComponents/InventoryWrapper/InventoryCard";
 
 interface Props {

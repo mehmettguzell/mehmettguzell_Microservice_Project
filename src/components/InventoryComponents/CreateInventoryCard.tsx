@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Inventory } from "@/types";
+import { Inventory } from "@/types/Inventory";
 import { addInventory } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 
@@ -25,27 +25,21 @@ export default function CreateInventoryCard() {
     }
 
     setLoading(true);
+    const newInventoryData: Omit<Inventory, "id"> = {
+      skuCode,
+      quantity,
+    };
 
     try {
-      const newInventoryData: Omit<Inventory, "id"> = {
-        skuCode,
-        quantity,
-      };
-
-      const response = await addInventory(newInventoryData);
-
+      await addInventory(newInventoryData);
       resetForm();
       router.refresh();
     } catch (error: any) {
       const errorData = error?.response?.data;
-
-      if (errorData?.message) {
-        alert(errorData.message);
-      } else {
-        alert("Failed to create inventory. Please try again.");
-      }
-    } finally {
-      setLoading(false);
+      alert(
+        "Failed to create inventory. Please try again." +
+          (errorData?.message || "")
+      );
     }
   };
 

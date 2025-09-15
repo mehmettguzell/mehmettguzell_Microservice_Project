@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Inventory } from "@/types";
+import { Inventory } from "@/types/Inventory";
 import AddQuantitySection from "@/inventoryComponents/AddQuantitySection";
 import { addStock, setQuantityZeroById } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
