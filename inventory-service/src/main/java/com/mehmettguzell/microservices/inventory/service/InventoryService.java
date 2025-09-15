@@ -57,7 +57,7 @@ public class InventoryService {
     }
 
     public InventoryResponse addStock(Long id, InventoryRequest request) {
-        inventoryValidator.validateInventoryRequest(request.skuCode(), request.quantity());
+        inventoryValidator.validateInventoryRequest(request.quantity());
         Inventory inventory = getInventoryById(id);
         increaseInventoryQuantity(inventory, request.quantity());
         return saveAndLog(inventory, "Stock added to inventory:");

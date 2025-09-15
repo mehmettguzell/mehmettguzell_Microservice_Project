@@ -1,4 +1,4 @@
 package com.mehmettguzell.microservices.inventory.dto;
 
-public record ApiResponse<T>(String message, T data) {
+public record ApiResponse<T>(boolean success, String message, T data) {
 }
