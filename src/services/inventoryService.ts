@@ -1,11 +1,11 @@
 import { get } from "http";
 import { fetcher } from "../lib/fetcher";
-import { ApiResponse, Inventory } from "../types";
+import { Inventory, ApiResponse, ApiErrorData } from "@/types";
 
 const BASE = "http://localhost:9000/api/inventory";
 
-export const addInventory = (Inventory: Omit<Inventory, "id">) =>
-  fetcher<Inventory>(`${BASE}`, {
+export const addInventory = (Inventory: Omit<Inventory, "id">) => {
+  fetcher<ApiResponse<Inventory> | ApiErrorData>(`${BASE}`, {
     cache: "no-store",
     method: "POST",
     body: JSON.stringify(Inventory),
@@ -13,32 +13,33 @@ export const addInventory = (Inventory: Omit<Inventory, "id">) =>
       "Content-Type": "application/json",
     },
   });
+};
 
-export const getAllInventory = async () => {
+export const getAllInventory = async (): Promise<Inventory[]> => {
   const response = await fetcher<ApiResponse<Inventory[]>>(`${BASE}/all`, {
     cache: "no-store",
   });
+  if (!response.success) {
+    throw new Error(response.data.message);
+  }
   return response.data;
 };
 
 export const getInventoryBySkuCode = (skuCode: string) =>
-  fetcher<ApiResponse<Inventory>>(`${BASE}/${skuCode}`, { cache: "no-store" });
+  fetcher<Inventory>(`${BASE}/${skuCode}`, { cache: "no-store" });
 
 export const isSkuCodeValid = (skuCode: string) =>
-  fetcher<ApiResponse<boolean>>(`${BASE}/validate?skuCode=${skuCode}`, {
+  fetcher<boolean>(`${BASE}/validate?skuCode=${skuCode}`, {
     cache: "no-store",
   });
 
 export const isInStock = (skuCode: string, quantity: number) =>
-  fetcher<ApiResponse<boolean>>(
-    `${BASE}/validate?skuCode=${skuCode}&quantity=${quantity}`,
-    {
-      cache: "no-store",
-    }
-  );
+  fetcher<boolean>(`${BASE}/validate?skuCode=${skuCode}&quantity=${quantity}`, {
+    cache: "no-store",
+  });
 
 export const addStock = (id: string, quantity: number) =>
-  fetcher<ApiResponse<Inventory>>(`${BASE}/addStock/${id}`, {
+  fetcher<Inventory>(`${BASE}/addStock/${id}`, {
     cache: "no-store",
     method: "PATCH",
     headers: {
@@ -48,13 +49,13 @@ export const addStock = (id: string, quantity: number) =>
   });
 
 export const setQuantityZeroBySkuCode = (skuCode: string) =>
-  fetcher<ApiResponse<Inventory>>(`${BASE}?skuCode=${skuCode}`, {
+  fetcher<Inventory>(`${BASE}?skuCode=${skuCode}`, {
     cache: "no-store",
     method: "DELETE",
   });
 
 export const setQuantityZeroById = (id: string) =>
-  fetcher<ApiResponse<Inventory>>(`${BASE}?id=${id}`, {
+  fetcher<Inventory>(`${BASE}?id=${id}`, {
     cache: "no-store",
     method: "DELETE",
   });

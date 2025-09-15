@@ -1,7 +1,18 @@
-export interface ApiResponse<T> {
+export type InventoryCheck = { available: boolean };
+
+export type ApiResponseData = Inventory | InventoryCheck;
+
+export interface ApiErrorData {
+  timestamp: string;
+  status: number;
+  error: string;
+  code: string;
   message: string;
-  data: T;
 }
+
+export type ApiResponse<T = ApiResponseData> =
+  | { success: true; message: string; data: T }
+  | { success: false; message: string; data: ApiErrorData };
 
 export type Product = {
   id: string;

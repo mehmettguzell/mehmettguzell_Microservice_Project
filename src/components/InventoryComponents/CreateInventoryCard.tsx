@@ -7,31 +7,45 @@ import { useRouter } from "next/navigation";
 export default function CreateInventoryCard() {
   const [skuCode, setSkuCode] = useState("");
   const [quantity, setQuantity] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const resetFrom = () => {
+  const resetForm = () => {
     setSkuCode("");
     setQuantity(0);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!skuCode || quantity <= 0) {
       alert("Please provide valid SKU Code and Quantity.");
       return;
     }
+
+    setLoading(true);
+
     try {
       const newInventoryData: Omit<Inventory, "id"> = {
         skuCode,
         quantity,
       };
-      await addInventory(newInventoryData);
-      resetFrom();
+
+      const response = await addInventory(newInventoryData);
+
+      resetForm();
       router.refresh();
-    } catch (error) {
-      console.error("Inventory oluşturulurken bir hata oluştu:", error);
-      alert("Inventory oluşturulurken bir hata oluştu.");
+    } catch (error: any) {
+      const errorData = error?.response?.data;
+
+      if (errorData?.message) {
+        alert(errorData.message);
+      } else {
+        alert("Failed to create inventory. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
