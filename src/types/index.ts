@@ -12,7 +12,7 @@ export type Inventory = {
   quantity: number;
 };
 
-export type OrderStatus = "PENDING" | "COMPLETED" | "CANCELLED";
+export type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
 
 export type OrderRequest = {
   skuCode: string;
