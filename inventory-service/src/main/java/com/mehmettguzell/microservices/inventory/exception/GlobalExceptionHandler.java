@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ErrorResponse buildError(HttpStatus status, String code, String message) {
+    private ErrorResponse buildErrorDetail(HttpStatus status, String code) {
         return new ErrorResponse(
                 code,
                 status.value(),
@@ -21,10 +21,10 @@ public class GlobalExceptionHandler {
         );
     }
 
-    private <T> ResponseEntity<ApiResponse<T>> buildErrorResponse(HttpStatus status, String message) {
+    private ResponseEntity<ApiResponse<ErrorResponse>> buildErrorResponse(HttpStatus status, String message) {
         String code = ErrorCode.fromMessage(message);
-        ErrorResponse error = buildError(status, code, message);
-        ApiResponse<T> response = new ApiResponse<>(false, message, (T) error);
+        ErrorResponse error = buildErrorDetail(status, code);
+        ApiResponse<ErrorResponse> response = new ApiResponse<>(false, message, error);
         return new ResponseEntity<>(response, status);
     }
 

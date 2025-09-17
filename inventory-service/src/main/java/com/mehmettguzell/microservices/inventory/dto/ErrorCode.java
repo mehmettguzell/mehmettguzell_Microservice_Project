@@ -1,5 +1,11 @@
 package com.mehmettguzell.microservices.inventory.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+
 public enum ErrorCode {
     SKU_ALREADY_EXISTS("SKU code already exists", "SKU_ALREADY_EXISTS"),
     INVENTORY_NOT_FOUND("Inventory not found", "INVENTORY_NOT_FOUND"),
@@ -9,19 +15,6 @@ public enum ErrorCode {
 
     private final String message;
     private final String code;
-
-    ErrorCode(String message, String code) {
-        this.message = message;
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getCode() {
-        return code;
-    }
 
     public static String fromMessage(String message) {
         for (ErrorCode e : values()) {
