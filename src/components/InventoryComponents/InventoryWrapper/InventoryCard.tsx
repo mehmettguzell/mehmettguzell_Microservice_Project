@@ -13,7 +13,7 @@ interface Props {
 export default function InventoryCard({ inventory }: Props) {
   const [amount, setAmount] = useState(0);
   const [error, setError] = useState<string | null>(null);
-
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const deleteState = () => {
@@ -21,25 +21,40 @@ export default function InventoryCard({ inventory }: Props) {
   };
 
   const handleAddStock = async (amount: number) => {
+    setLoading(true);
     if (amount <= 0) return;
     try {
+      setError(null);
       await addStock(inventory.id, amount);
       router.refresh();
       deleteState();
     } catch (error) {
-      setError("Failed to add stock. Please try again.");
-      return;
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      resetAll();
     }
   };
 
   const handleDeleteStock = async () => {
     try {
+      setError(null);
       await setQuantityZeroById(inventory.id);
       router.refresh();
     } catch (error) {
-      setError("Failed to delete stock. Please try again.");
-      return;
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      resetAll();
     }
+  };
+
+  const resetAll = () => {
+    router.refresh();
+    setAmount(0);
+    setLoading(false);
   };
 
   return (
@@ -64,6 +79,7 @@ export default function InventoryCard({ inventory }: Props) {
           onAdd={handleAddStock}
         />
         <DeleteStocks onDelete={handleDeleteStock} />
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       </div>
     </div>
   );
