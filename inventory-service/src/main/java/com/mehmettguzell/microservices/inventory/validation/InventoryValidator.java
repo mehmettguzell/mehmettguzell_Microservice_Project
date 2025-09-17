@@ -37,7 +37,7 @@ public class InventoryValidator {
         if (skuCode == null || skuCode.isBlank()) {
             throw new InvalidInventoryRequestException("SKU code cannot be null or blank");
         }
-        if (!skuCode.matches("^[A-Za-z0-9\\-]+$")) {
+        if (!skuCode.matches("^[A-Za-z0-9\\-_]+$")) {
             throw new InvalidInventoryRequestException(
                     "SKU code format is invalid. Allowed format: only uppercase letters (A-Z), digits (0-9), and hyphen (-), length 3-50 characters."
             );
