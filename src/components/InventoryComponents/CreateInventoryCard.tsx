@@ -3,44 +3,40 @@ import React, { useState } from "react";
 import { Inventory } from "@/types/Inventory";
 import { addInventory } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
+import { validateInventoryInput } from "@/validator/inventoryValidator";
 
 export default function CreateInventoryCard() {
   const [skuCode, setSkuCode] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const newInventory: Omit<Inventory, "id"> = { skuCode, quantity };
+
+    try {
+      validateInventoryInput(newInventory.skuCode, newInventory.quantity);
+      await addInventory(newInventory);
+      resetForm();
+      router.refresh();
+    } catch (err) {
+      if (err instanceof Error) {
+        setFormError(err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const resetForm = () => {
     setSkuCode("");
     setQuantity(0);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!skuCode || quantity <= 0) {
-      alert("Please provide valid SKU Code and Quantity.");
-      return;
-    }
-
-    setLoading(true);
-    const newInventoryData: Omit<Inventory, "id"> = {
-      skuCode,
-      quantity,
-    };
-
-    try {
-      await addInventory(newInventoryData);
-      resetForm();
-      router.refresh();
-    } catch (error: any) {
-      const errorData = error?.response?.data;
-      alert(
-        "Failed to create inventory. Please try again." +
-          (errorData?.message || "")
-      );
-    }
+    setFormError(null);
   };
 
   return (
@@ -48,7 +44,8 @@ export default function CreateInventoryCard() {
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
         Create New Inventory
       </h2>
-      <form className="space-y-5">
+
+      <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             SKU Code
@@ -77,11 +74,13 @@ export default function CreateInventoryCard() {
 
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-blue-600 hover:shadow-lg active:scale-95 transition-all duration-200"
-          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-blue-600 hover:shadow-lg active:scale-95 transition-all duration-200 disabled:opacity-50"
         >
-          Create Inventory
+          {loading ? "Creating..." : "Create Inventory"}
         </button>
+
+        {formError && <p className="text-red-600 text-sm">{formError}</p>}
       </form>
     </div>
   );
