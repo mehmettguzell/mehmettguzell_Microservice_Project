@@ -8,4 +8,7 @@ export function validateInventoryInput(
   if (skuCode.length < 3 || skuCode.length > 50) {
     throw new Error("SKU Code must be between 3 and 50 characters.");
   }
+  if (quantity > 2147483647) {
+    throw new Error("Quantity exceeds maximum allowed value.");
+  }
 }

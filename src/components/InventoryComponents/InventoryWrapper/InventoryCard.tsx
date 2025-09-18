@@ -5,6 +5,7 @@ import AddQuantitySection from "@/inventoryComponents/AddQuantitySection";
 import { addStock, setQuantityZeroById } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 import DeleteStocks from "@/inventoryComponents/DeleteStocks";
+import { validateInventoryInput } from "@/validator/inventoryValidator";
 
 interface Props {
   inventory: Inventory;
@@ -21,9 +22,10 @@ export default function InventoryCard({ inventory }: Props) {
   };
 
   const handleAddStock = async (amount: number) => {
-    setLoading(true);
-    if (amount <= 0) return;
     try {
+      validateInventoryInput(inventory.skuCode, amount);
+      setLoading(true);
+      if (amount <= 0) return;
       setError(null);
       await addStock(inventory.id, amount);
       router.refresh();
