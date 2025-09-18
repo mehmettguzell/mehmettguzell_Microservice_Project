@@ -1,5 +1,6 @@
 package com.mehmettguzell.microservices.order.controller;
 
+import com.mehmettguzell.microservices.order.dto.ApiResponse;
 import com.mehmettguzell.microservices.order.dto.OrderRequest;
 import com.mehmettguzell.microservices.order.dto.OrderResponse;
 import com.mehmettguzell.microservices.order.service.OrderService;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -20,38 +20,39 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponse placeOrder(@Valid @RequestBody OrderRequest orderRequest) {
-        return orderService.placeOrder(orderRequest);
+    public ApiResponse<OrderResponse> placeOrder(@Valid @RequestBody OrderRequest orderRequest) {
+        return ApiResponse.ok(orderService.placeOrder(orderRequest),"Order Created");
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public OrderResponse getOrder(@PathVariable Long id) {
-        return orderService.getOrderById(id);
+    public ApiResponse<OrderResponse> getOrder(@PathVariable Long id) {
+        return ApiResponse.ok(orderService.getOrderById(id),"Order Found");
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderResponse> getAllOrders() {
-        return orderService.getAllOrders();
+    public ApiResponse<List<OrderResponse>> getAllOrders() {
+        List<OrderResponse> orders = orderService.getAllOrders();
+        return ApiResponse.ok(orders, "All Orders Found");
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public OrderResponse updateOrder(@PathVariable Long id,
+    public ApiResponse<OrderResponse> updateOrder(@PathVariable Long id,
                                      @Valid @RequestBody OrderRequest orderRequest) {
-        return orderService.updateOrder(id, orderRequest);
+        return ApiResponse.ok(orderService.updateOrder(id, orderRequest),"Order Updated");
     }
 
     @PatchMapping("/confirm/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public OrderResponse confirmOrder(@PathVariable Long id){
-        return orderService.confirmOrder(id);
+    public ApiResponse<OrderResponse> confirmOrder(@PathVariable Long id){
+        return ApiResponse.ok(orderService.confirmOrder(id),"Order Confirmed");
     }
 
     @DeleteMapping
-    public Map<String,String> deleteOrder(@RequestParam Long id) {
-        String message = orderService.cancelOrder(id);
-        return Map.of("message", message);
+    public ApiResponse<Void> deleteOrder(@RequestParam Long id) {
+        orderService.cancelOrder(id);
+        return ApiResponse.ok(null, "Order Deleted " + id);
     }
 }

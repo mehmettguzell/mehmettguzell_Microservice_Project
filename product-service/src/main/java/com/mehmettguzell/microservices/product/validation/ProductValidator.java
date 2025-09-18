@@ -55,8 +55,6 @@ public class ProductValidator {
         validateSkuCodeFormat(skuCode);
         ensureSkuNotInInventory(skuCode);
         ensureProductNotExists(skuCode);
-
-//TODO
     }
 
     private void validateSkuCodeFormat(String skuCode) {

@@ -1,60 +1,66 @@
 package com.mehmettguzell.microservices.order.exception;
 
+import com.mehmettguzell.microservices.order.dto.ApiResponse;
+import com.mehmettguzell.microservices.order.dto.ErrorCode;
 import com.mehmettguzell.microservices.order.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ErrorResponse buildError(HttpStatus status, String code, String message) {
+    private final ResponseEntityExceptionHandler responseEntityExceptionHandler;
+
+    public GlobalExceptionHandler(ResponseEntityExceptionHandler responseEntityExceptionHandler) {
+        this.responseEntityExceptionHandler = responseEntityExceptionHandler;
+    }
+
+    private ErrorResponse buildError(String code, HttpStatus status) {
         return new ErrorResponse(
-                java.time.ZonedDateTime.now().toString(),
+                code,
                 status.value(),
                 status.getReasonPhrase(),
-                code,
-                message
+                java.time.ZonedDateTime.now().toString()
         );
+    }
+
+    public ResponseEntity<ApiResponse<ErrorResponse>> buildApiResponse(HttpStatus status, String message) {
+        String code = ErrorCode.getErrorCode(message);
+        ErrorResponse errorResponse = buildError(code, status);
+        ApiResponse<ErrorResponse> apiResponse = new ApiResponse<>(false, message,  errorResponse);
+        return new ResponseEntity<>(apiResponse, status);
     }
 
     @ExceptionHandler(ProductOutOfStockException.class)
-    public ResponseEntity<ErrorResponse> handleOutOfStock(ProductOutOfStockException ex) {
-        return new ResponseEntity<>(buildError(HttpStatus.CONFLICT, "PRODUCT_OUT_OF_STOCK", ex.getMessage()), HttpStatus.CONFLICT);
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleOutOfStock(ProductOutOfStockException ex) {
+        return buildApiResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleOrderNotFound(OrderNotFoundException ex) {
-        return new ResponseEntity<>(
-                buildError(HttpStatus.NOT_FOUND, "ORDER_NOT_FOUND", ex.getMessage()),
-                HttpStatus.NOT_FOUND
-        );
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleOrderNotFound(OrderNotFoundException ex) {
+        return buildApiResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
-
     @ExceptionHandler(InvalidSkuCodeException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidSkuCode(InvalidSkuCodeException ex) {
-        return new ResponseEntity<>(
-                buildError(HttpStatus.BAD_REQUEST, "INVALID_SKU", ex.getMessage()),
-                HttpStatus.BAD_REQUEST
-        );
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleInvalidSkuCode(InvalidSkuCodeException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
-        String msg = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        return new ResponseEntity<>(
-                buildError(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", msg),
-                HttpStatus.BAD_REQUEST
-        );
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleValidation(MethodArgumentNotValidException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        return new ResponseEntity<>(
-                buildError(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "An unexpected error occurred"),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleException(Exception ex) {
+        return buildApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+    @ExceptionHandler(InvalidOrderRequestException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleInvalidOrderRequest(InvalidOrderRequestException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
 }

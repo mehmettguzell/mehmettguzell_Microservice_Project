@@ -3,13 +3,13 @@ package com.mehmettguzell.microservices.order.service;
 import com.mehmettguzell.microservices.order.client.InventoryClient;
 import com.mehmettguzell.microservices.order.dto.OrderRequest;
 import com.mehmettguzell.microservices.order.dto.OrderResponse;
-import com.mehmettguzell.microservices.order.exception.InvalidSkuCodeException;
 import com.mehmettguzell.microservices.order.exception.OrderNotFoundException;
 import com.mehmettguzell.microservices.order.exception.ProductOutOfStockException;
 import com.mehmettguzell.microservices.order.mapper.OrderMapper;
 import com.mehmettguzell.microservices.order.model.Order;
 import com.mehmettguzell.microservices.order.model.OrderStatus;
 import com.mehmettguzell.microservices.order.repository.OrderRepository;
+import com.mehmettguzell.microservices.order.validation.OrderValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,56 +24,78 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final InventoryClient inventoryClient;
+    private final OrderMapper orderMapper;
+    private final OrderValidator orderValidator;
 
     @Transactional
-    public OrderResponse placeOrder(OrderRequest orderRequest) {
-        ensureProductInStock(orderRequest);
+    public OrderResponse placeOrder(OrderRequest request) {
+        orderValidator.validateOrderRequest(request);
+        ensureProductInStock(request);
 
-        Order order = createPendingOrder(orderRequest);
-        persistOrder(order);
+        Order order = mapToPendingOrder(request);
+        saveOrder(order);
 
-        return toResponse(order);
+        return mapToResponse(order);
     }
 
     public OrderResponse getOrderById(Long id) {
-        return toResponse(fetchOrder(id));
+        return mapToResponse(fetchOrder(id));
     }
 
     public List<OrderResponse> getAllOrders() {
-        return fetchAllOrders()
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        return orderMapper.toResponseList(orderRepository.findAll());
     }
 
     @Transactional
-    public OrderResponse updateOrder(Long id, OrderRequest orderRequest) {
-        validateSkuCode(orderRequest.skuCode());
+    public OrderResponse updateOrder(Long id, OrderRequest request) {
+        orderValidator.validateSkuCode(request.skuCode());
         Order order = fetchOrder(id);
-        applyRequestToOrder(order, orderRequest);
-        persistOrder(order);
 
-        return toResponse(order);
+        orderMapper.updateOrder(order, request);
+        saveOrder(order);
+
+        return mapToResponse(order);
     }
 
-    private void validateSkuCode(String skuCode) {
-        if (!inventoryClient.isSkuCodeValid(skuCode)) {
-            throw new InvalidSkuCodeException(skuCode);
-        }
-    }
-    public OrderResponse confirmOrder(Long orderId) {
-        Order order = fetchOrder(orderId);
+    @Transactional
+    public OrderResponse confirmOrder(Long id) {
+        Order order = fetchOrder(id);
         order.confirm();
-        persistOrder(order);
-        return toResponse(order);
+        saveOrder(order);
+
+        return mapToResponse(order);
     }
 
     @Transactional
     public String cancelOrder(Long id) {
         Order order = fetchOrder(id);
-        if(order.getStatus().equals(OrderStatus.CANCELLED)) {return "Already Cancelled";}
+
+        if (order.getStatus() == OrderStatus.CANCELLED) return "Already Cancelled";
+
         order.setStatus(OrderStatus.CANCELLED);
-        return "Order with id " + id + " Canceled successfully";
+        saveOrder(order);
+
+        return "Order with id " + id + " cancelled successfully";
+    }
+
+    // ===========================
+    // PRIVATE HELPERS
+    // ===========================
+
+    private void ensureProductInStock(OrderRequest request) {
+        if (!inventoryClient.isInStock(request.skuCode(), request.quantity())) {
+            Order order = orderMapper.toEntity(request);
+            order.setStatus(OrderStatus.CANCELLED);
+            saveOrder(order);
+
+            throw new ProductOutOfStockException(request.skuCode());
+        }
+    }
+
+    private Order mapToPendingOrder(OrderRequest request) {
+        Order order = orderMapper.toEntity(request);
+        order.setStatus(OrderStatus.PENDING);
+        return order;
     }
 
     private Order fetchOrder(Long id) {
@@ -81,47 +103,17 @@ public class OrderService {
                 .orElseThrow(() -> new OrderNotFoundException(id));
     }
 
-    private List<Order> fetchAllOrders() {
-        return orderRepository.findAll();
-    }
-
-    private void ensureProductInStock(OrderRequest request) {
-        if (!inventoryClient.isInStock(request.skuCode(), request.quantity())) {
-
-            Order order = OrderMapper.toEntity(request);
-            order.setStatus(OrderStatus.CANCELLED);
-            persistOrder(order);
-
-            throw new ProductOutOfStockException(request.skuCode());
-        }
-    }
-
-    private Order createPendingOrder(OrderRequest request) {
-        Order order = OrderMapper.toEntity(request);
-        order.setStatus(OrderStatus.PENDING);
-        return order;
-    }
-
-    private void applyRequestToOrder(Order order, OrderRequest request) {
-        OrderMapper.applyRequestToOrder(order, request);
-    }
-
-    private void persistOrder(Order order) {
+    private void saveOrder(Order order) {
         orderRepository.save(order);
         logOrderAction(order, "saved");
     }
 
-    private void removeOrder(Order order) {
-        orderRepository.delete(order);
-        logOrderAction(order, "deleted");
-    }
-
-    private OrderResponse toResponse(Order order) {
-        return OrderMapper.toResponse(order);
+    private OrderResponse mapToResponse(Order order) {
+        return orderMapper.toResponse(order);
     }
 
     private void logOrderAction(Order order, String action) {
-        log.info("Order with id: {}, Order Number: {} has been {} successfully",
+        log.info("Order with id: {}, order number: {} has been {} successfully",
                 order.getId(), order.getOrderNumber(), action);
     }
 }
