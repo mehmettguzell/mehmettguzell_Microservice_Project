@@ -44,8 +44,18 @@ public class GlobalExceptionHandler {
         return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(ProductAlreadyExist.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>>  handleProductAlreadyExist(ProductAlreadyExist ex){
+        return buildApiResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleException(Exception ex) {
         return buildApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidProductRequestException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>>  handleInvalidProductRequestException(InvalidProductRequestException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 }

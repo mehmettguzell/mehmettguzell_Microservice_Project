@@ -41,9 +41,8 @@ public class InventoryService {
     }
 
     public List<InventoryResponse> getAllInventories() {
-        return inventoryRepository.findAll().stream()
-                .map(inventoryMapper::toResponse)
-                .toList();
+        inventoryValidator.isAnyInventoryExist();
+        return inventoryMapper.toResponseList(inventoryRepository.findAll());
     }
 
     public boolean doesSkuCodeExist(@Valid String skuCode) {

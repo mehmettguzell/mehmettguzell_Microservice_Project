@@ -9,4 +9,8 @@ public class InventoryNotFoundException extends RuntimeException {
     public InventoryNotFoundException(String skuCode) {
         super("Inventory with SKU code " + skuCode + " not found");
     }
+
+    public  InventoryNotFoundException() {
+        super("Could not find any inventory ");
+    }
 }

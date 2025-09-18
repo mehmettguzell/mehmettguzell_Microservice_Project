@@ -1,13 +1,23 @@
 package com.mehmettguzell.microservices.inventory.validation;
 
-import com.mehmettguzell.microservices.inventory.dto.InventoryRequest;
 import com.mehmettguzell.microservices.inventory.exception.InvalidInventoryRequestException;
 import com.mehmettguzell.microservices.inventory.exception.InventoryNotFoundException;
 import com.mehmettguzell.microservices.inventory.modul.Inventory;
+import com.mehmettguzell.microservices.inventory.repository.InventoryRepository;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class InventoryValidator {
+
+    private InventoryRepository inventoryRepository;
+
+    public void isAnyInventoryExist(){
+        if (inventoryRepository.count() == 0) {
+            throw new InventoryNotFoundException("No inventory records found");
+        }
+    }
+
     public void validateInventoryRequest(String skuCode, Integer quantity) {
         validateSkuCode(skuCode);
         validateQuantity(quantity);

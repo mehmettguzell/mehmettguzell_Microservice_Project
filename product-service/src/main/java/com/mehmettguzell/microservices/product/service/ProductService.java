@@ -1,13 +1,14 @@
 package com.mehmettguzell.microservices.product.service;
 
 import com.mehmettguzell.microservices.product.client.InventoryClient;
+import com.mehmettguzell.microservices.product.dto.ActionType;
 import com.mehmettguzell.microservices.product.dto.ProductResponse;
 import com.mehmettguzell.microservices.product.dto.ProductRequest;
-import com.mehmettguzell.microservices.product.exception.InvalidSkuCodeException;
 import com.mehmettguzell.microservices.product.exception.ProductNotFoundException;
 import com.mehmettguzell.microservices.product.mapper.ProductMapper;
 import com.mehmettguzell.microservices.product.model.Product;
 import com.mehmettguzell.microservices.product.repository.ProductRepository;
+import com.mehmettguzell.microservices.product.validation.ProductValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,50 +24,87 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final InventoryClient inventoryClient;
+    private final ProductValidator productValidator;
 
     @Transactional
     public ProductResponse createProduct(ProductRequest request) {
-        validateSkuCode(request.skuCode());
-        Product product = productMapper.toEntity(request);
-        Product savedProduct = saveAndLogProduct(product, "created");
-        return productMapper.toResponse(savedProduct);
+        validateProductRequest(request);
+        Product product = mapToEntity(request);
+        Product savedProduct = persistProduct(product, ActionType.CREATED);
+        return mapToResponse(savedProduct);
     }
 
     public ProductResponse getProduct(String id) {
-        Product product = getProductEntityOrThrow(id);
-        return productMapper.toResponse(product);
+        productValidator.validateRequestId(id);
+        return mapToResponse(getProductEntityOrThrow(id));
     }
 
     public List<ProductResponse> getAllProducts() {
-        return productMapper.toResponseList(productRepository.findAll());
+        productValidator.isAnyProductExist();
+        return toRepsonseList(productRepository.findAll());
     }
 
     public List<ProductResponse> searchProductByName(String name) {
-        return productMapper.toResponseList(productRepository.findByNameContainingIgnoreCase(name));
+        productValidator.validateSearchQuery(name);
+        return toRepsonseList(productRepository.findByNameContainingIgnoreCase(name));
     }
 
     @Transactional
     public ProductResponse updateProduct(String id, ProductRequest request) {
-        Product product = getProductEntityOrThrow(id);
-        productMapper.updateEntity(product, request);
-        Product savedProduct = saveAndLogProduct(product, "updated");
-        return productMapper.toResponse(savedProduct);
+        validateUpdateRequest(id, request);
+        Product product = fetchAndUpdateProduct(id, request);
+        Product savedProduct = persistProduct(product, ActionType.UPDATED);
+        return mapToResponse(savedProduct);
     }
 
     @Transactional
     public String deleteProduct(String id) {
         Product product = getProductEntityOrThrow(id);
-        if (product.getSkuCode() != null) {
-            inventoryQuantityZero(product.getSkuCode());
-        }
-        deleteAndLogProduct(product);
-        return "Product Deleted: " + product.getId() ;
+        resetInventoryIfExists(product);
+        removeProduct(product);
+        return "Product Deleted: " + product.getId();
+    }
+    // ===========================
+    // PRIVATE HELPERS
+    // ===========================
+
+    private void validateProductRequest(ProductRequest request) {
+        productValidator.validateProductRequest(request);
     }
 
-    private void validateSkuCode(String skuCode) {
-        if (!inventoryClient.isSkuCodeValid(skuCode)) {
-            throw new InvalidSkuCodeException(skuCode);
-        }
+    private void resetInventoryIfExists(Product product) {
+        productValidator.validateSkuCode(product.getSkuCode());
+        inventoryQuantityZero(product.getSkuCode());
+    }
+
+        private void removeProduct(Product product) {
+        deleteAndLogProduct(product);
+    }
+
+    private List<ProductResponse> toRepsonseList(List<Product> products) {
+        return productMapper.toResponseList(products);
+    }
+
+    private void validateUpdateRequest(String id, ProductRequest request) {
+        productValidator.validateRequestId(id);
+        productValidator.validateProductRequest(request);
+    }
+
+    private ProductResponse mapToResponse(Product product) {
+        return productMapper.toResponse(product);
+    }
+    private Product mapToEntity(ProductRequest request) {
+        return productMapper.toEntity(request);
+    }
+
+    private Product fetchAndUpdateProduct(String id, ProductRequest request) {
+        Product product = getProductEntityOrThrow(id);
+        productMapper.updateEntity(product, request);
+        return product;
+    }
+
+    private Product persistProduct(Product product, ActionType action) {
+        return saveProductWithLog(product, action.getLabel());
     }
 
     private void inventoryQuantityZero(String skuCode) {
@@ -78,7 +116,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    private Product saveAndLogProduct(Product product, String action) {
+    private Product saveProductWithLog(Product product, String action) {
         productRepository.save(product);
         logProduct(product, action);
         return product;

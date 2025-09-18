@@ -19,8 +19,8 @@ public class InventoryMapper {
         );
     }
 
-    public List<InventoryResponse> toResponseList(List<Inventory> all) {
-        return all.stream()
+    public List<InventoryResponse> toResponseList(List<Inventory> inventories) {
+        return inventories.stream()
                 .map(this::toResponse)
                 .toList();
     }
