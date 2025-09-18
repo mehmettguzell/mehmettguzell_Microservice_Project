@@ -4,6 +4,8 @@ import com.mehmettguzell.microservices.order.client.InventoryClient;
 import com.mehmettguzell.microservices.order.dto.ApiResponse;
 import com.mehmettguzell.microservices.order.dto.OrderRequest;
 import com.mehmettguzell.microservices.order.dto.OrderResponse;
+import com.mehmettguzell.microservices.order.exception.InvalidSkuCodeException;
+import com.mehmettguzell.microservices.order.exception.OrderCanNotBeCanceledException;
 import com.mehmettguzell.microservices.order.exception.OrderNotFoundException;
 import com.mehmettguzell.microservices.order.exception.ProductOutOfStockException;
 import com.mehmettguzell.microservices.order.mapper.OrderMapper;
@@ -30,14 +32,15 @@ public class OrderService {
 
     @Transactional
     public OrderResponse placeOrder(OrderRequest request) {
-        orderValidator.validateOrderRequest(request);
-        ensureProductInStock(request);
+        validateOrderRequest(request);
+        validateAndCancelIfOutOfStock(request);
 
         Order order = mapToPendingOrder(request);
         saveOrder(order);
 
         return mapToResponse(order);
     }
+
 
     public OrderResponse getOrderById(Long id) {
         return mapToResponse(fetchOrder(id));
@@ -49,51 +52,79 @@ public class OrderService {
 
     @Transactional
     public OrderResponse updateOrder(Long id, OrderRequest request) {
-        orderValidator.validateSkuCode(request.skuCode());
+        validateForUpdate(request, id);
+
         Order order = fetchOrder(id);
-
         orderMapper.updateOrder(order, request);
-        saveOrder(order);
 
+        saveOrder(order);
         return mapToResponse(order);
     }
 
     @Transactional
     public OrderResponse confirmOrder(Long id) {
+        validateId(id);
+
         Order order = fetchOrder(id);
         order.confirm();
-        saveOrder(order);
 
+        saveOrder(order);
         return mapToResponse(order);
     }
 
     @Transactional
-    public String cancelOrder(Long id) {
-        Order order = fetchOrder(id);
+    public void cancelOrder(Long id) {
+        validateId(id);
 
-        if (order.getStatus() == OrderStatus.CANCELLED) return "Already Cancelled";
+        Order order = fetchOrder(id);
+        ensureOrderCanBeCancelled(order);
 
         order.setStatus(OrderStatus.CANCELLED);
         saveOrder(order);
-
-        return "Order with id " + id + " cancelled successfully";
     }
 
     // ===========================
     // PRIVATE HELPERS
     // ===========================
 
-    private void ensureProductInStock(OrderRequest request) {
-        ApiResponse<Boolean> response = inventoryClient.isInStock(request.skuCode(), request.quantity());
-        if (!Boolean.TRUE.equals(response.data())) {
-            Order order = orderMapper.toEntity(request);
-            order.setStatus(OrderStatus.CANCELLED);
-            saveOrder(order);
-
-            throw new ProductOutOfStockException(request.skuCode());
+    private void ensureOrderCanBeCancelled(Order order) {
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new OrderCanNotBeCanceledException(order.getSkuCode());
         }
     }
 
+    private void validateForUpdate(OrderRequest request, Long id) {
+        validateId(id);
+        orderValidator.validateSkuCode(request.skuCode());
+        validateIsSkuCodeValid(request.skuCode());
+    }
+
+    private void validateId(Long id){
+        orderValidator.validateId(id);
+    }
+
+    private void validateIsSkuCodeValid(String skuCode) {
+        ApiResponse<Boolean> response = inventoryClient.isSkuCodeValid(skuCode);
+        if (!response.data()){
+            throw new InvalidSkuCodeException(skuCode);
+        }
+    }
+
+    private void validateAndCancelIfOutOfStock(OrderRequest request) {
+        ApiResponse<Boolean> response = inventoryClient.isInStock(request.skuCode(), request.quantity());
+        if (!Boolean.TRUE.equals(response.data())) {
+            Order cancelledOrder = orderMapper.toEntity(request);
+            cancelledOrder.setStatus(OrderStatus.CANCELLED);
+            saveOrder(cancelledOrder);
+            throw new ProductOutOfStockException(request.skuCode(), request.quantity());
+        }
+    }
+
+    public void validateOrderRequest(OrderRequest request) {
+        orderValidator.validateSkuCode(request.skuCode());
+        orderValidator.validatePrice(request.price());
+        orderValidator.validateQuantity(request.quantity());
+    }
 
     private Order mapToPendingOrder(OrderRequest request) {
         Order order = orderMapper.toEntity(request);

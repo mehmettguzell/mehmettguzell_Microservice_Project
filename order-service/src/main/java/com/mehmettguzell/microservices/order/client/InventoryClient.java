@@ -11,5 +11,5 @@ public interface InventoryClient {
                                    @RequestParam("quantity") Integer quantity);
 
     @GetExchange("/api/inventory/validate")
-    boolean isSkuCodeValid(@RequestParam("skuCode") String skuCode);
+    ApiResponse<Boolean> isSkuCodeValid(@RequestParam("skuCode") String skuCode);
 }

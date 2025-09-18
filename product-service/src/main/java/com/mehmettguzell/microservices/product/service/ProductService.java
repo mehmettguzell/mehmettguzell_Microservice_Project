@@ -68,11 +68,6 @@ public class ProductService {
     // PRIVATE HELPERS
     // ===========================
 
-    private void validateProductRequest(ProductRequest request) {
-        productValidator.validateProductRequest(request);
-    }
-
-
     private List<ProductResponse> toRepsonseList(List<Product> products) {
         return productMapper.toResponseList(products);
     }
@@ -82,6 +77,13 @@ public class ProductService {
         productValidator.validateDescription(request.description());
         productValidator.validatePrice(request.price());
         productValidator.validateName(request.name());
+    }
+
+    private void validateProductRequest(ProductRequest request){
+        productValidator.validateSkuCode(request.skuCode());
+        productValidator.validateName(request.name());
+        productValidator.validateDescription(request.description());
+        productValidator.validatePrice(request.price());
     }
 
     private ProductResponse mapToResponse(Product product) {
@@ -101,9 +103,6 @@ public class ProductService {
         return saveProductWithLog(product, action.getLabel());
     }
 
-    private void inventoryQuantityZero(String skuCode) {
-        inventoryClient.setQuantityZero(skuCode);
-    }
 
     private Product getProductEntityOrThrow(String id) {
         return productRepository.findById(id)

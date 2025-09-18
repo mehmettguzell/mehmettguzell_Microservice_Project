@@ -2,7 +2,6 @@ package com.mehmettguzell.microservices.product.validation;
 
 import com.mehmettguzell.microservices.product.client.InventoryClient;
 import com.mehmettguzell.microservices.product.dto.ApiResponse;
-import com.mehmettguzell.microservices.product.dto.ProductRequest;
 import com.mehmettguzell.microservices.product.exception.InvalidProductRequestException;
 import com.mehmettguzell.microservices.product.exception.InvalidSkuCodeException;
 import com.mehmettguzell.microservices.product.exception.ProductAlreadyExist;
@@ -17,13 +16,6 @@ import java.math.BigDecimal;
 public class ProductValidator {
     private final InventoryClient inventoryClient;
     private final ProductRepository productRepository;
-
-    public void validateProductRequest(ProductRequest request) {
-        validateSkuCode(request.skuCode());
-        validateName(request.name());
-        validateDescription(request.description());
-        validatePrice(request.price());
-    }
 
     public void validateSearchQuery(String name){
         if (name == null || name.isBlank()) {
@@ -42,10 +34,6 @@ public class ProductValidator {
         if (!id.matches("^[A-Za-z0-9\\-]+$")) {
             throw new InvalidProductRequestException("Id format is invalid. Only letters, digits, and hyphens allowed.");
         }
-    }
-
-    private void ensureProductExists(String id) {
-        if (productRepository.existsById(id)) throw new ProductAlreadyExist();
     }
 
     public void validateSkuCode(String skuCode) {
