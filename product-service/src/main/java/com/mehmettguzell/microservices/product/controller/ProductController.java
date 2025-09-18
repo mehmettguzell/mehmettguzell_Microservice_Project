@@ -1,5 +1,6 @@
 package com.mehmettguzell.microservices.product.controller;
 
+import com.mehmettguzell.microservices.product.dto.ApiResponse;
 import com.mehmettguzell.microservices.product.dto.ProductRequest;
 import com.mehmettguzell.microservices.product.dto.ProductResponse;
 import com.mehmettguzell.microservices.product.service.ProductService;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -20,38 +20,44 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponse createProduct(@Valid @RequestBody ProductRequest productRequest){
-        return productService.createProduct(productRequest);
+    public ApiResponse<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest){
+        return ApiResponse.ok(productService.createProduct(productRequest), "New Product Created");
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponse getProduct(@PathVariable String id){
-        return productService.getProduct(id);
+    public ApiResponse<ProductResponse> getProduct(@PathVariable String id){
+        return ApiResponse.ok(productService.getProduct(id), "Product Found");
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getAllProducts(){
-        return productService.getAllProducts();
+    public ApiResponse<List<ProductResponse>> getAllProducts(){
+        List<ProductResponse> products = productService.getAllProducts();
+        return ApiResponse.ok(products, "All products retrieved successfully");
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> searchProductByName(@RequestParam String name){
-        return productService.searchProductByName(name);
+    public ApiResponse<List<ProductResponse>> searchProductByName(@RequestParam String name){
+        List<ProductResponse> products = productService.searchProductByName(name);
+        return ApiResponse.ok(products, "Searched products found successfully");
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponse updateProduct(@PathVariable String id,
-                                         @Valid @RequestBody ProductRequest productRequest){
-        return productService.updateProduct(id, productRequest);
-    }
-    @DeleteMapping()
-    public Map<String, String> deleteProduct(@RequestParam String id){
-        String message = productService.deleteProduct(id);
-        return Map.of("message", message);
+    public ApiResponse<ProductResponse> updateProduct(
+            @PathVariable String id,
+            @Valid @RequestBody ProductRequest productRequest
+    ) {
+        ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
+        return ApiResponse.ok(updatedProduct, "Product Updated");
     }
 
+    @DeleteMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Void> deleteProduct(@RequestParam String id){
+        productService.deleteProduct(id);
+        return ApiResponse.ok(null, "Product Deleted: " + id);
+    }
 }

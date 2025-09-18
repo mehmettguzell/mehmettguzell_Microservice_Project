@@ -58,11 +58,10 @@ public class ProductService {
     }
 
     @Transactional
-    public String deleteProduct(String id) {
+    public void deleteProduct(String id) {
         Product product = getProductEntityOrThrow(id);
         resetInventoryIfExists(product);
         removeProduct(product);
-        return "Product Deleted: " + product.getId();
     }
     // ===========================
     // PRIVATE HELPERS
@@ -124,7 +123,7 @@ public class ProductService {
 
     private void deleteAndLogProduct(Product product) {
         productRepository.delete(product);
-        logProduct(product, "deleted");
+        logProduct(product, ActionType.DELETED.getLabel());
     }
 
     private void logProduct(Product product, String action) {
