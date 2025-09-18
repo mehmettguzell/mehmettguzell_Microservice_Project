@@ -1,11 +1,3 @@
-export type Product = {
-  id: string;
-  name: string;
-  skuCode: string;
-  description?: string;
-  price: number;
-};
-
 export type OrderStatus = "PENDING" | "CONFIRMED" | "CANCELLED";
 
 export type OrderRequest = {

@@ -1,7 +1,9 @@
 import React from "react";
-import { Product } from "@/types";
+import toast from "react-hot-toast";
+import { Product } from "@/types/Product";
 import { createOrder } from "@/services/orderService";
 import { OrderRequest } from "@/types";
+import { Toaster } from "react-hot-toast";
 
 interface Props {
   product: Product;
@@ -15,26 +17,28 @@ export default function OrderButton({ product }: Props) {
     price: product.price,
     quantity: amount,
   };
-  const orderProduct = async (orderRequest: OrderRequest) => {
-    try {
-      await createOrder(orderRequest);
-    } catch (error) {
-      alert("Failed to create order. Please try again.");
-    }
-  };
-  const handleOrder = () => {
+
+  const handleOrder = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
     if (amount <= 0) {
-      alert("Please enter a valid amount greater than zero.");
+      toast.error("Please enter a valid amount greater than zero.");
       clearInput();
       return;
     }
-    alert(`Ordering product with ID: ${product.id}`);
-    orderProduct(orderRequest);
+
+    try {
+      await createOrder(orderRequest);
+      toast.success("order successfull");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   };
 
   const clearInput = () => {
     setAmount(0);
   };
+
   return (
     <div className="flex gap-2">
       <input
@@ -48,10 +52,7 @@ export default function OrderButton({ product }: Props) {
       />
       <button
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleOrder();
-        }}
+        onClick={handleOrder}
         className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors duration-300"
       >
         Order

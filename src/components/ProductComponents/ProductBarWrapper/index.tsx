@@ -1,41 +1,64 @@
 "use client";
 
-import { use, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import ProductSearchBar from "./ProductSearchBar";
+import ProductList from "./ProductList";
+import ProductCreateCard from "@/components/ProductComponents/ProductCreateCard";
+import { Product } from "@/types/Product";
 import {
   searchProductsByName,
   getAllProducts,
 } from "@/services/productService";
-import ProductSearchBar from "@/components/ProductComponents/ProductBarWrapper/ProductSearchBar";
-import ProductList from "@/components/ProductComponents/ProductBarWrapper/ProductList";
-import ProductCreateCard from "@/components/ProductComponents/ProductBarWrapper/ProductCreateCard";
-import { Product } from "@/types";
+import OrderButton from "../OrderButton";
 
 interface Props {
-  initialProducts: Promise<Product[]>;
+  products: Product[];
 }
 
-export default function ProductSearchBarWrapper({ initialProducts }: Props) {
-  const initialProductsResolved = use(initialProducts);
-  const [productList, setProductList] = useState<Product[]>(
-    initialProductsResolved,
-  );
+export default function ProductBarWrapper({ products }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [productList, setProductList] = useState<Product[]>(products);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSearch = async (query: string) => {
-    setSearchQuery(query);
-    if (query === "") {
-      const allProducts = await getAllProducts();
-      setProductList(allProducts);
-    } else {
-      const filteredProducts = await searchProductsByName(query);
-      setProductList(filteredProducts);
-    }
-  };
+  function debounce(func: (...args: any[]) => void, wait: number) {
+    let timeout: ReturnType<typeof setTimeout> | null;
+    return (...args: Parameters<typeof func>) => {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }
+
+  const fetchProducts = useCallback(
+    debounce(async (query: string) => {
+      setLoading(true);
+      setError("");
+      try {
+        if (!query) {
+          setProductList(products);
+        } else {
+          const result = await searchProductsByName(query);
+          setProductList(result);
+        }
+      } catch (e) {
+        setError("Ürünler aranırken bir hata oluştu.");
+      } finally {
+        setLoading(false);
+      }
+    }, 300),
+    [products]
+  );
+
+  useEffect(() => {
+    fetchProducts(searchQuery);
+  }, [searchQuery, fetchProducts]);
 
   return (
     <div>
-      <ProductSearchBar value={searchQuery} onChange={handleSearch} />
-      <ProductList initialData={productList} />
+      <ProductSearchBar value={searchQuery} onChange={setSearchQuery} />
+      {loading && <div>Loading...</div>}
+      {error && <div className="text-red-500">{error}</div>}
+      <ProductList products={productList} />
       <ProductCreateCard setProducts={setProductList} />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 import React, { startTransition, useState } from "react";
-import { Product } from "@/types";
+import { Product } from "@/types/Product";
 import { createProduct } from "@/services/productService";
 import { isSkuCodeValid } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
@@ -45,7 +45,6 @@ export default function ProductCreateCard({ setProducts }: Props) {
       alert("Ürün başarıyla oluşturuldu! ID: " + response.id);
       router.refresh();
     } catch (error) {
-      console.error("Ürün oluşturulurken bir hata oluştu:", error);
       alert("Ürün oluşturulurken bir hata oluştu.");
     }
   };

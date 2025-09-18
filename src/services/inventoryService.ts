@@ -1,6 +1,6 @@
-import { get } from "http";
 import { fetcher } from "../lib/fetcher";
-import { Inventory, ApiResponse, ApiErrorData } from "@/types/Inventory";
+import { Inventory } from "@/types/Inventory";
+import { ApiResponse, ApiErrorData } from "@/types/ApiResponse";
 
 const BASE = "http://localhost:9000/api/inventory";
 
@@ -11,6 +11,7 @@ async function handleResponse<T>(promise: Promise<ApiResponse<T>>): Promise<T> {
   }
   return response.data;
 }
+
 export const addInventory = (inventory: Omit<Inventory, "id">) =>
   handleResponse(
     fetcher<ApiResponse<Inventory>>(BASE, {
