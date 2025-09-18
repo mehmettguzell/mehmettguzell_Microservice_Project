@@ -41,7 +41,6 @@ public class InventoryService {
     }
 
     public List<InventoryResponse> getAllInventories() {
-        inventoryValidator.isAnyInventoryExist();
         return inventoryMapper.toResponseList(inventoryRepository.findAll());
     }
 

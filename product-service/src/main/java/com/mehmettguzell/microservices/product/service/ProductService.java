@@ -40,7 +40,6 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        productValidator.isAnyProductExist();
         return toRepsonseList(productRepository.findAll());
     }
 

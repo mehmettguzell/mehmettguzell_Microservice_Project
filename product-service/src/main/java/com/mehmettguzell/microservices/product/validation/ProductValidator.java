@@ -33,12 +33,6 @@ public class ProductValidator {
         }
     }
 
-    public void isAnyProductExist(){
-        if (productRepository.count() == 0) {
-            throw new ProductNotFoundException();
-        }
-    }
-
     public void validateRequestId(String id) {
         validateIdFormat(id);
         ensureProductExists(id);

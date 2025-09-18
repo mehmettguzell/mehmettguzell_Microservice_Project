@@ -12,12 +12,6 @@ public class InventoryValidator {
 
     private InventoryRepository inventoryRepository;
 
-    public void isAnyInventoryExist(){
-        if (inventoryRepository.count() == 0) {
-            throw new InventoryNotFoundException("No inventory records found");
-        }
-    }
-
     public void validateInventoryRequest(String skuCode, Integer quantity) {
         validateSkuCode(skuCode);
         validateQuantity(quantity);
