@@ -8,16 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    private final ResponseEntityExceptionHandler responseEntityExceptionHandler;
-
-    public GlobalExceptionHandler(ResponseEntityExceptionHandler responseEntityExceptionHandler) {
-        this.responseEntityExceptionHandler = responseEntityExceptionHandler;
-    }
 
     private ErrorResponse buildError(String code, HttpStatus status) {
         return new ErrorResponse(
@@ -44,6 +37,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse>> handleOrderNotFound(OrderNotFoundException ex) {
         return buildApiResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
+
     @ExceptionHandler(InvalidSkuCodeException.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleInvalidSkuCode(InvalidSkuCodeException ex) {
         return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -58,9 +52,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<ErrorResponse>> handleException(Exception ex) {
         return buildApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+
     @ExceptionHandler(InvalidOrderRequestException.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleInvalidOrderRequest(InvalidOrderRequestException ex) {
         return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
-
 }

@@ -1,18 +1,16 @@
 package com.mehmettguzell.microservices.product.validation;
 
 import com.mehmettguzell.microservices.product.client.InventoryClient;
+import com.mehmettguzell.microservices.product.dto.ApiResponse;
 import com.mehmettguzell.microservices.product.dto.ProductRequest;
 import com.mehmettguzell.microservices.product.exception.InvalidProductRequestException;
 import com.mehmettguzell.microservices.product.exception.InvalidSkuCodeException;
 import com.mehmettguzell.microservices.product.exception.ProductAlreadyExist;
-import com.mehmettguzell.microservices.product.exception.ProductNotFoundException;
-import com.mehmettguzell.microservices.product.model.Product;
 import com.mehmettguzell.microservices.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +33,6 @@ public class ProductValidator {
 
     public void validateRequestId(String id) {
         validateIdFormat(id);
-        ensureProductExists(id);
     }
 
     private void validateIdFormat(String id) {
@@ -72,7 +69,8 @@ public class ProductValidator {
     }
 
     private void ensureSkuNotInInventory(String skuCode) {
-        if (!inventoryClient.isSkuCodeValid(skuCode)) {
+        ApiResponse<Boolean> response = inventoryClient.isSkuCodeValid(skuCode);
+        if (!Boolean.TRUE.equals(response.data())) {
             throw new InvalidSkuCodeException(skuCode);
         }
     }

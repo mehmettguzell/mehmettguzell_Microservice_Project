@@ -62,6 +62,8 @@ public class ProductService {
         resetInventoryIfExists(product);
         removeProduct(product);
     }
+
+
     // ===========================
     // PRIVATE HELPERS
     // ===========================
@@ -70,14 +72,6 @@ public class ProductService {
         productValidator.validateProductRequest(request);
     }
 
-    private void resetInventoryIfExists(Product product) {
-        productValidator.validateSkuCode(product.getSkuCode());
-        inventoryQuantityZero(product.getSkuCode());
-    }
-
-        private void removeProduct(Product product) {
-        deleteAndLogProduct(product);
-    }
 
     private List<ProductResponse> toRepsonseList(List<Product> products) {
         return productMapper.toResponseList(products);
@@ -85,7 +79,9 @@ public class ProductService {
 
     private void validateUpdateRequest(String id, ProductRequest request) {
         productValidator.validateRequestId(id);
-        productValidator.validateProductRequest(request);
+        productValidator.validateDescription(request.description());
+        productValidator.validatePrice(request.price());
+        productValidator.validateName(request.name());
     }
 
     private ProductResponse mapToResponse(Product product) {
@@ -118,6 +114,23 @@ public class ProductService {
         productRepository.save(product);
         logProduct(product, action);
         return product;
+    }
+
+    private void resetInventoryIfExists(Product product) {
+        String skuCode = product.getSkuCode();
+        if (skuCode != null && !skuCode.isBlank()) {
+            try {
+                inventoryClient.setQuantityZero(skuCode);
+            } catch (Exception ex) {
+                log.error("Failed to reset inventory for SKU {}: {}", skuCode, ex.getMessage());
+            }
+        } else {
+            log.warn("Product SKU is null or blank, skipping inventory reset for product id: {}", product.getId());
+        }
+    }
+
+    private void removeProduct(Product product) {
+        deleteAndLogProduct(product);
     }
 
     private void deleteAndLogProduct(Product product) {

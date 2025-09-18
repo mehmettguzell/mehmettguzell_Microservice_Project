@@ -1,6 +1,7 @@
 package com.mehmettguzell.microservices.order.service;
 
 import com.mehmettguzell.microservices.order.client.InventoryClient;
+import com.mehmettguzell.microservices.order.dto.ApiResponse;
 import com.mehmettguzell.microservices.order.dto.OrderRequest;
 import com.mehmettguzell.microservices.order.dto.OrderResponse;
 import com.mehmettguzell.microservices.order.exception.OrderNotFoundException;
@@ -83,7 +84,8 @@ public class OrderService {
     // ===========================
 
     private void ensureProductInStock(OrderRequest request) {
-        if (!inventoryClient.isInStock(request.skuCode(), request.quantity())) {
+        ApiResponse<Boolean> response = inventoryClient.isInStock(request.skuCode(), request.quantity());
+        if (!Boolean.TRUE.equals(response.data())) {
             Order order = orderMapper.toEntity(request);
             order.setStatus(OrderStatus.CANCELLED);
             saveOrder(order);
@@ -91,6 +93,7 @@ public class OrderService {
             throw new ProductOutOfStockException(request.skuCode());
         }
     }
+
 
     private Order mapToPendingOrder(OrderRequest request) {
         Order order = orderMapper.toEntity(request);

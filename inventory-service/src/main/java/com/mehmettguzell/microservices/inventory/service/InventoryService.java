@@ -49,10 +49,10 @@ public class InventoryService {
         return inventoryRepository.existsBySkuCode(skuCode);
     }
 
-    public boolean isInStock(String skuCode, Integer quantity) {
-        inventoryValidator.validateInventoryRequest(skuCode, quantity);
-        return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
-    }
+        public boolean isInStock(String skuCode, Integer quantity) {
+            inventoryValidator.validateInventoryRequest(skuCode, quantity);
+            return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
+        }
 
     public InventoryResponse addStock(Long id, InventoryRequest request) {
         inventoryValidator.validateInventoryRequest(request.quantity());

@@ -13,11 +13,9 @@ import java.math.BigDecimal;
 public class OrderValidator {
 
     public void validateOrderRequest(OrderRequest request) {
-        validateOrderNumber(request.orderNumber());
         validateSkuCode(request.skuCode());
         validatePrice(request.price());
         validateQuantity(request.quantity());
-        validateOrderStatus(request.status());
     }
 
     public void validateOrderNumber(String orderNumber) {
