@@ -21,8 +21,7 @@ public class InventoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<InventoryResponse> addInventory(@Valid @RequestBody InventoryRequest request) {
-        InventoryResponse createdInventory = inventoryService.createInventory(request);
-        return new ApiResponse<>(true, "Inventory created successfully", createdInventory);
+        return ApiResponse.ok(inventoryService.createInventory(request), "Inventory created successfully");
     }
 
     @GetMapping("/{skuCode}")
@@ -37,8 +36,7 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<InventoryResponse>> getAllInventories() {
         List<InventoryResponse> inventories = inventoryService.getAllInventories();
-        String message = inventories.isEmpty() ? "No inventory found" : "Inventory list retrieved successfully";
-        return new ApiResponse<>(true, message, inventories);
+        return ApiResponse.ok(inventories, "Inventory list retrieved successfully");
     }
 
     @GetMapping("/validate")
@@ -64,8 +62,7 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<InventoryResponse> addStock(@PathVariable Long id,
                                                    @Valid @RequestBody InventoryRequest request) {
-        InventoryResponse updatedInventory = inventoryService.addStock(id, request);
-        return new ApiResponse<>(true, "Stock updated successfully", updatedInventory);
+        return ApiResponse.ok(inventoryService.addStock(id, request), "Inventory stock updated successfully");
     }
 
     @DeleteMapping
@@ -80,6 +77,6 @@ public class InventoryController {
         } else {
             throw new IllegalArgumentException("Either id or skuCode must be provided");
         }
-        return new ApiResponse<>(true, "Inventory quantity set to zero", response);
+        return ApiResponse.ok(null,"Inventory Stock reset successfully");
     }
 }
