@@ -2,6 +2,7 @@
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteProduct } from "@/services/productService";
+import toast from "react-hot-toast";
 
 interface Props {
   productId: string;
@@ -14,8 +15,12 @@ export default function DeleteProductButton({ productId }: Props) {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
       await deleteProduct(productId);
+      toast.success("deleted: " + productId);
       router.push("/product");
-    } catch (e) {}
+    } catch (e: any) {
+      toast.error(e.message);
+      router.refresh();
+    }
   };
   return (
     <button

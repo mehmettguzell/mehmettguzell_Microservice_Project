@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Product } from "@/types/Product";
 import OrderButton from "../OrderButton";
 import Link from "next/link";
+import DeleteProductButton from "../ProductIdPage/DeleteProductButton";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
-  const [error, setError] = useState<string | null>(null);
   return (
     <div className="border p-4 rounded shadow">
       <Link href={`/product/${product.id}`}>
@@ -19,6 +19,7 @@ export default function ProductCard({ product }: Props) {
         <p>Açıklama: {product.description}</p>
       </Link>
       <OrderButton key={product.id} product={product} />
+      <DeleteProductButton productId={product.id} />
     </div>
   );
 }

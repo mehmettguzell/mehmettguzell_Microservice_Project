@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { Product } from "@/types/Product";
 import { createOrder } from "@/services/orderService";
 import { OrderRequest } from "@/types";
-import { Toaster } from "react-hot-toast";
 
 interface Props {
   product: Product;

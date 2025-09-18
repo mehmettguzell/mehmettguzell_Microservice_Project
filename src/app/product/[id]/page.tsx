@@ -3,6 +3,7 @@ import { getProductById } from "@/services/productService";
 import ProductIdCard from "@/components/ProductComponents/ProductIdPage/ProductIdCard";
 import { getInventoryBySkuCode } from "@/services/inventoryService";
 import DeleteProductButton from "@/components/ProductComponents/ProductIdPage/DeleteProductButton";
+import toast from "react-hot-toast";
 
 interface Props {
   params: { id: string };

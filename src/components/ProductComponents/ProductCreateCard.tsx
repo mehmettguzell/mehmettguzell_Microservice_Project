@@ -4,6 +4,8 @@ import { Product } from "@/types/Product";
 import { createProduct } from "@/services/productService";
 import { isSkuCodeValid } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { clear } from "console";
 
 interface Props {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
@@ -15,39 +17,47 @@ export default function ProductCreateCard({ setProducts }: Props) {
   const [description, setDescription] = useState("");
 
   const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const newProductData: Omit<Product, "id"> = {
+      name,
+      skuCode,
+      price: parseFloat(price),
+      description,
+    };
+
+    if (!(await validateSkuCode())) return;
     try {
-      const newProductData: Omit<Product, "id"> = {
-        name,
-        skuCode,
-        price: parseFloat(price),
-        description,
-      };
-
-      let response;
-      if (await isSkuCodeValid(skuCode)) {
-        response = await createProduct(newProductData);
-      } else {
-        alert("inventory de böyle bir skuCode mevcut değil.");
-        return;
-      }
-
-      setProducts((prev) => [...prev, response]);
-
-      setName("");
-      setSkuCode("");
-      setPrice("");
-      setDescription("");
-
-      alert("Ürün başarıyla oluşturuldu! ID: " + response.id);
-      router.refresh();
-    } catch (error) {
-      alert("Ürün oluşturulurken bir hata oluştu.");
+      const response = await createProduct(newProductData);
+      handleCreationSuccess(response);
+    } catch (err) {
+      handleError(err);
     }
   };
+
+  const validateSkuCode = async () => {
+    const valid = await isSkuCodeValid(skuCode);
+    if (!valid) toast.error("SKU Code not in inventory");
+    return valid;
+  };
+
+  const handleCreationSuccess = (product: Product) => {
+    clearForm();
+    toast.success(`Product created! ID: ${product.id}`);
+    router.refresh();
+  };
+
+  const handleError = (err: any) => {
+    toast.error(err.message);
+  };
+  const clearForm = () => {
+    setName("");
+    setSkuCode("");
+    setPrice("");
+    setDescription("");
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
