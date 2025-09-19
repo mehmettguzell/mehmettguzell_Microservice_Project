@@ -65,7 +65,7 @@ export const confirmOrder = (id: number) =>
 
 export const cancelOrder = (id: number) =>
   handleResponse<{ message: string }>(
-    fetcher<ApiResponse<{ message: string }>>(`${BASE}/${id}`, {
+    fetcher<ApiResponse<{ message: string }>>(`${BASE}?id=${id}`, {
       cache: "no-store",
       method: "DELETE",
     })

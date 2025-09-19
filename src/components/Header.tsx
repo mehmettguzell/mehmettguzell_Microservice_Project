@@ -11,6 +11,7 @@ export default function Header() {
   const links = [
     { href: "/inventory", label: "Inventory" },
     { href: "/product", label: "Products" },
+    { href: "/cart", label: "Cart" },
   ];
 
   return (
@@ -20,7 +21,6 @@ export default function Header() {
           MyApp
         </Link>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-6">
           {links.map((link) => (
             <Link
@@ -37,7 +37,6 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden p-2 rounded-md hover:bg-gray-100"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -46,7 +45,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Nav */}
       {mobileOpen && (
         <nav className="md:hidden bg-white border-t px-6 py-4 flex flex-col gap-4">
           {links.map((link) => (
