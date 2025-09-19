@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { getAllInventory } from "@/services/inventoryService";
-import InventoryBarWrapper from "@/components/InventoryComponents/InventoryWrapper/index";
+import InventoryBarWrapper from "@/inventoryComponents/InventoryBarWrapper";
 
 export default async function InventoryPage() {
   const inventoryItems = await getAllInventory();

@@ -1,8 +1,8 @@
 import {} from "react";
 import { getProductById } from "@/services/productService";
-import ProductIdCard from "@/components/ProductComponents/ProductIdPage/ProductIdCard";
+import ProductIdCard from "@/components/product/ProductIdCard";
 import { getInventoryBySkuCode } from "@/services/inventoryService";
-import DeleteProductButton from "@/components/ProductComponents/ProductIdPage/DeleteProductButton";
+import DeleteProductButton from "@/components/product/DeleteProductButton";
 import toast from "react-hot-toast";
 
 interface Props {

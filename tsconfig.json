@@ -27,8 +27,9 @@
       "@/types/*": ["./src/types/*"],
       "@/services/*": ["./src/services/*"],
       "@/components/*": ["./src/components/*"],
-      "@/productComponents/*": ["./src/components/ProductComponents/*"],
-      "@/inventoryComponents/*": ["./src/components/InventoryComponents/*"],
+      "@/productComponents/*": ["./src/components/product/*"],
+      "@/inventoryComponents/*": ["./src/components/inventory/*"],
+      "@/orderComponents/*": ["./src/components/order/*"],
       "@/validator/*": ["./src/validator/*"]
     }
   },

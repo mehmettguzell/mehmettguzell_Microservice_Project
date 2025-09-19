@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { Product } from "@/types/Product";
-import OrderButton from "../OrderButton";
+import OrderButton from "./OrderButton";
 import Link from "next/link";
-import DeleteProductButton from "../ProductIdPage/DeleteProductButton";
+import DeleteProductButton from "./DeleteProductButton";
 
 interface Props {
   product: Product;

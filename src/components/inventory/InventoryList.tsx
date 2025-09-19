@@ -1,5 +1,5 @@
 import { Inventory } from "@/types/Inventory";
-import InventoryCard from "@/inventoryComponents/InventoryWrapper/InventoryCard";
+import InventoryCard from "@/inventoryComponents//InventoryCard";
 
 interface Props {
   initialInventory: Inventory[];

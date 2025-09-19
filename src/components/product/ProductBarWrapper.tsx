@@ -3,13 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import ProductSearchBar from "./ProductSearchBar";
 import ProductList from "./ProductList";
-import ProductCreateCard from "@/components/ProductComponents/ProductCreateCard";
+import ProductCreateCard from "@/components/product/ProductCreateCard";
 import { Product } from "@/types/Product";
 import {
   searchProductsByName,
   getAllProducts,
 } from "@/services/productService";
-import OrderButton from "../OrderButton";
 
 interface Props {
   products: Product[];

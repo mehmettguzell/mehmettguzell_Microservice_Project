@@ -1,32 +1,31 @@
 "use client";
+
 import { OrderResponse } from "@/types";
-import { use } from "react";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import OrderList from "./OrderList";
-import { getAllOrders } from "@/services/orderService";
 
-export default function OrderWrapper() {
-  const [allOrders, setAllOrders] = useState<OrderResponse[]>([]);
+type OrderWrapperProps = {
+  allOrders: OrderResponse[];
+};
 
-  useEffect(() => {
-    getAllOrders().then((data) => setAllOrders(data));
-  }, []);
+export default function OrderWrapper({ allOrders }: OrderWrapperProps) {
+  const [orders, setOrders] = useState<OrderResponse[]>(allOrders);
 
   const handleCancel = (orderId: number) => {
-    setAllOrders((prev) =>
+    setOrders((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, status: "CANCELLED" } : o))
     );
   };
 
   const handleConfirm = (orderId: number) => {
-    setAllOrders((prev) =>
+    setOrders((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, status: "CONFIRMED" } : o))
     );
   };
 
   return (
     <OrderList
-      allOrders={allOrders}
+      allOrders={orders}
       onCancel={handleCancel}
       onConfirm={handleConfirm}
     />

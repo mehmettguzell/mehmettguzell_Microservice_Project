@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ProductCard from "@/components/ProductComponents/ProductBarWrapper/ProductCard";
+import ProductCard from "@/components/product/ProductCard";
 import { Product } from "@/types/Product";
 
 interface Props {
