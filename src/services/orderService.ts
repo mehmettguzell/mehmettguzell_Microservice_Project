@@ -20,7 +20,6 @@ async function handleResponse<T>(promise: Promise<ApiResponse<T>>): Promise<T> {
 
   return response.data;
 }
-
 export const createOrder = (order: OrderRequest) =>
   handleResponse(
     fetcher<ApiResponse<OrderResponse>>(`${BASE}`, {
