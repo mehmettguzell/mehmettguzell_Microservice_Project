@@ -66,6 +66,14 @@ export const addStock = (id: string, quantity: number) =>
     })
   );
 
+export const deleteInventoryById = (id: string) =>
+  handleResponse(
+    fetcher<ApiResponse<Inventory>>(`${BASE}/delete?id=${id}`, {
+      cache: "no-store",
+      method: "DELETE",
+    })
+  );
+
 export const setQuantityZeroBySkuCode = (skuCode: string) =>
   handleResponse(
     fetcher<ApiResponse<Inventory>>(`${BASE}?skuCode=${skuCode}`, {

@@ -2,11 +2,16 @@
 import { useState } from "react";
 import { Inventory } from "@/types/Inventory";
 import AddQuantitySection from "@/inventoryComponents/AddQuantitySection";
-import { addStock, setQuantityZeroById } from "@/services/inventoryService";
+import {
+  addStock,
+  deleteInventoryById,
+  setQuantityZeroById,
+} from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 import DeleteStocks from "@/inventoryComponents/DeleteStocks";
 import { validateInventoryInput } from "@/validator/inventoryValidator";
 import toast from "react-hot-toast";
+import DeleteInventory from "./DeleteInventory";
 
 interface Props {
   inventory: Inventory;
@@ -44,6 +49,21 @@ export default function InventoryCard({ inventory }: Props) {
     }
   };
 
+  const onDeleteInventory = async () => {
+    try {
+      setLoading(true);
+      await deleteInventoryById(inventory.id);
+      toast.success("Envanter silindi 🗑️");
+      router.refresh();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    } finally {
+      resetAll();
+    }
+  };
+
   const handleDeleteStock = async () => {
     try {
       await setQuantityZeroById(inventory.id);
@@ -72,7 +92,14 @@ export default function InventoryCard({ inventory }: Props) {
         <span className="text-sm font-medium text-white bg-blue-500 px-3 py-1 rounded-full shadow-md">
           ID: {inventory.id}
         </span>
+        <DeleteInventory
+          onDeleteInventory={onDeleteInventory}
+          id={inventory.id}
+        />
       </div>
+
+      <div className="mb-4"></div>
+
       <div className="text-gray-700">
         <p className="mb-2 text-lg font-semibold">
           Quantity: <span className="text-gray-900">{inventory.quantity}</span>
