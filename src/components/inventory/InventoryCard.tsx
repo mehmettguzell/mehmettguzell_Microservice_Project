@@ -6,6 +6,7 @@ import { addStock, setQuantityZeroById } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 import DeleteStocks from "@/inventoryComponents/DeleteStocks";
 import { validateInventoryInput } from "@/validator/inventoryValidator";
+import toast from "react-hot-toast";
 
 interface Props {
   inventory: Inventory;
@@ -13,7 +14,6 @@ interface Props {
 
 export default function InventoryCard({ inventory }: Props) {
   const [amount, setAmount] = useState(0);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -25,14 +25,19 @@ export default function InventoryCard({ inventory }: Props) {
     try {
       validateInventoryInput(inventory.skuCode, amount);
       setLoading(true);
-      if (amount <= 0) return;
-      setError(null);
+
+      if (amount <= 0) {
+        toast.error("Miktar 0 veya negatif olamaz");
+        return;
+      }
+
       await addStock(inventory.id, amount);
+      toast.success(`${amount} adet stok eklendi ✅`);
       router.refresh();
       deleteState();
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        toast.error(error.message);
       }
     } finally {
       resetAll();
@@ -41,12 +46,12 @@ export default function InventoryCard({ inventory }: Props) {
 
   const handleDeleteStock = async () => {
     try {
-      setError(null);
       await setQuantityZeroById(inventory.id);
+      toast.success("Stok sıfırlandı 🗑️");
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {
-        setError(error.message);
+        toast.error(error.message);
       }
     } finally {
       resetAll();
@@ -54,7 +59,6 @@ export default function InventoryCard({ inventory }: Props) {
   };
 
   const resetAll = () => {
-    router.refresh();
     setAmount(0);
     setLoading(false);
   };
@@ -81,7 +85,6 @@ export default function InventoryCard({ inventory }: Props) {
           onAdd={handleAddStock}
         />
         <DeleteStocks onDelete={handleDeleteStock} />
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       </div>
     </div>
   );

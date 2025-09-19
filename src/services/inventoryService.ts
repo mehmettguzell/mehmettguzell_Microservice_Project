@@ -6,9 +6,18 @@ const BASE = "http://localhost:9000/api/inventory";
 
 async function handleResponse<T>(promise: Promise<ApiResponse<T>>): Promise<T> {
   const response = await promise;
+
   if (!response.success) {
-    throw new Error(response.data.message);
+    const errorMessage =
+      typeof response.data === "object" &&
+      response.data !== null &&
+      "message" in response.data
+        ? (response.data as any).message
+        : "Unknown error";
+
+    throw new Error(errorMessage);
   }
+
   return response.data;
 }
 

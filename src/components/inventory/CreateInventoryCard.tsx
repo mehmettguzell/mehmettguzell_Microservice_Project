@@ -4,12 +4,12 @@ import { Inventory } from "@/types/Inventory";
 import { addInventory } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 import { validateInventoryInput } from "@/validator/inventoryValidator";
+import { toast } from "react-hot-toast/headless";
 
 export default function CreateInventoryCard() {
   const [skuCode, setSkuCode] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -22,11 +22,14 @@ export default function CreateInventoryCard() {
     try {
       validateInventoryInput(newInventory.skuCode, newInventory.quantity);
       await addInventory(newInventory);
+
+      toast.success("Yeni envanter başarıyla eklendi ✅");
+
       resetForm();
       router.refresh();
     } catch (err) {
       if (err instanceof Error) {
-        setFormError(err.message);
+        toast.error(err.message);
       }
     } finally {
       setLoading(false);
@@ -36,7 +39,6 @@ export default function CreateInventoryCard() {
   const resetForm = () => {
     setSkuCode("");
     setQuantity(0);
-    setFormError(null);
   };
 
   return (
@@ -79,8 +81,6 @@ export default function CreateInventoryCard() {
         >
           {loading ? "Creating..." : "Create Inventory"}
         </button>
-
-        {formError && <p className="text-red-600 text-sm">{formError}</p>}
       </form>
     </div>
   );
