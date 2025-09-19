@@ -40,8 +40,8 @@ public class ProductService {
     }
 
     public String getProductIdBySkuCode(String skuCode) {
-        Product product = getProductEntityBySkuCodeOrThrow(skuCode);
-        return product.getId();
+        Product product = productRepository.findBySkuCode(skuCode);
+        return product != null ? product.getId() : null;
     }
 
     public List<ProductResponse> getAllProducts() {

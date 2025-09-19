@@ -9,9 +9,8 @@ import org.springframework.web.service.annotation.GetExchange;
 public interface ProductClient {
 
 @GetExchange("/api/product/get-id/{skuCode}")
-ApiResponse<String> getProductIdBySkuCode(@PathVariable String skuCode);
+String getProductIdBySkuCode(@PathVariable String skuCode);
 
 @DeleteExchange("/api/product")
 ApiResponse<Void> deleteProduct(@RequestParam("id") String id);
 }
-

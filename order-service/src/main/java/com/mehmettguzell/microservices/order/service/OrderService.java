@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -32,13 +33,16 @@ public class OrderService {
 
     @Transactional
     public OrderResponse placeOrder(OrderRequest request) {
-        validateOrderRequest(request);
-        validateAndCancelIfOutOfStock(request);
+        validateRequest(request);
 
-        Order order = mapToPendingOrder(request);
-        saveOrder(order);
+        ensureStockAvailabilityOrCancel(request);
 
-        return mapToResponse(order);
+        Order pendingOrder = createPendingOrder(request);
+        setOrderPrice(pendingOrder, request);
+
+        saveOrder(pendingOrder);
+
+        return mapToResponse(pendingOrder);
     }
 
 
@@ -86,6 +90,27 @@ public class OrderService {
     // ===========================
     // PRIVATE HELPERS
     // ===========================
+
+    private void validateRequest(OrderRequest request) {
+        validateOrderRequest(request);
+    }
+
+    private void ensureStockAvailabilityOrCancel(OrderRequest request) {
+        validateAndCancelIfOutOfStock(request);
+    }
+
+    private Order createPendingOrder(OrderRequest request) {
+        return mapToPendingOrder(request);
+    }
+
+    private void setOrderPrice(Order order, OrderRequest request) {
+        BigDecimal totalPrice = calculateTotalPrice(request);
+        order.setPrice(totalPrice);
+    }
+
+    private BigDecimal calculateTotalPrice(OrderRequest request) {
+        return request.price().multiply(BigDecimal.valueOf(request.quantity()));
+    }
 
     private void ensureOrderCanBeCancelled(Order order) {
         if (order.getStatus() == OrderStatus.CANCELLED) {

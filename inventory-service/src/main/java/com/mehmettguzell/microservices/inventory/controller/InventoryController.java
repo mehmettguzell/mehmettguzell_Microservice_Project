@@ -37,6 +37,13 @@ public class InventoryController {
         return ApiResponse.ok(inventories, "Inventory list retrieved successfully");
     }
 
+    @GetMapping("/{skuCode}/stock")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Integer> getAllStocksBySkuCode(@PathVariable String skuCode) {
+        return ApiResponse.ok(inventoryService.getAllStocksBySkuCode(skuCode),"Inventory stock retrieved successfully");
+    }
+
+
     @GetMapping("/validate")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Boolean> validateSkuCode(@RequestParam("skuCode") String skuCode) {
@@ -61,6 +68,13 @@ public class InventoryController {
     public ApiResponse<InventoryResponse> addStock(@PathVariable Long id,
                                                    @Valid @RequestBody InventoryRequest request) {
         return ApiResponse.ok(inventoryService.addStock(id, request), "Inventory stock updated successfully");
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<InventoryResponse> deleteInventory(@RequestParam Long id){
+        inventoryService.deleteInventory(id);
+        return ApiResponse.ok(null, "Inventory deleted successfully");
     }
 
     @DeleteMapping

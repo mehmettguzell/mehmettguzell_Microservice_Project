@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,11 @@ public class InventoryService {
         }
         Inventory inventory = mapToEntity(request);
         return saveAndLog(inventory, "Created inventory:");
+    }
+
+    public Integer getAllStocksBySkuCode(String skuCode) {
+        inventoryValidator.validateInventoryRequest(skuCode);
+        return  inventoryRepository.findInventoryQuantityBySkuCode(skuCode);
     }
 
     public InventoryResponse findInventoryBySkuCode(String skuCode) {
@@ -76,13 +82,9 @@ public class InventoryService {
     }
 
     private void deleteProductIfExists(String skuCode) {
-        try {
-            ApiResponse<String> response = productClient.getProductIdBySkuCode(skuCode);
-            if (response.success() && response.data() != null) {
-                productClient.deleteProduct(response.data());
-            }
-        } catch (Exception e) {
-            log.info("Product not found for skuCode={}, skipping deletion", skuCode, e);
+        String id = productClient.getProductIdBySkuCode(skuCode);
+        if (id != null) {
+            productClient.deleteProduct(id);
         }
     }
 
@@ -142,4 +144,6 @@ public class InventoryService {
     private void logInventory(String message, Inventory inventory) {
         log.info("{} {}", message, inventory);
     }
+
+
 }

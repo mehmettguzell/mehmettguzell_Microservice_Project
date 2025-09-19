@@ -12,4 +12,7 @@ public interface InventoryClient {
 
     @GetExchange("/api/inventory/validate")
     ApiResponse<Boolean> isSkuCodeValid(@RequestParam("skuCode") String skuCode);
+
+    //@GetExchange()
+
 }
