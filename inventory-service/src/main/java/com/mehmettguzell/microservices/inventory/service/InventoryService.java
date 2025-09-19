@@ -1,5 +1,7 @@
 package com.mehmettguzell.microservices.inventory.service;
 
+import com.mehmettguzell.microservices.inventory.client.ProductClient;
+import com.mehmettguzell.microservices.inventory.dto.ApiResponse;
 import com.mehmettguzell.microservices.inventory.dto.InventoryRequest;
 import com.mehmettguzell.microservices.inventory.dto.InventoryResponse;
 import com.mehmettguzell.microservices.inventory.exception.InvalidInventoryRequestException;
@@ -23,6 +25,7 @@ public class InventoryService {
     private final InventoryRepository inventoryRepository;
     private final InventoryMapper inventoryMapper;
     private final InventoryValidator inventoryValidator;
+    private final ProductClient productClient;
 
 
     public InventoryResponse createInventory(InventoryRequest request) {
@@ -63,9 +66,24 @@ public class InventoryService {
 
     public InventoryResponse resetQuantity(Long id) {
         Inventory inventory = getInventoryById(id);
+
+        deleteProductIfExists(inventory.getSkuCode());
+
         ensureQuantityIsNotAlreadyZero(inventory);
         inventory.setQuantity(0);
+
         return saveAndLog(inventory, "Inventory quantity reset to 0:");
+    }
+
+    private void deleteProductIfExists(String skuCode) {
+        try {
+            ApiResponse<String> response = productClient.getProductIdBySkuCode(skuCode);
+            if (response.success() && response.data() != null) {
+                productClient.deleteProduct(response.data());
+            }
+        } catch (Exception e) {
+            log.info("Product not found for skuCode={}, skipping deletion", skuCode, e);
+        }
     }
 
     public InventoryResponse resetQuantity(String skuCode) {
@@ -100,7 +118,7 @@ public class InventoryService {
         return mapToResponse(saved);
     }
 
-    private Inventory getInventoryBySkuCode(String skuCode) {
+    public Inventory getInventoryBySkuCode(String skuCode) {
         Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
         inventoryValidator.validateInventoryExists(inventory, skuCode);
         return inventory;

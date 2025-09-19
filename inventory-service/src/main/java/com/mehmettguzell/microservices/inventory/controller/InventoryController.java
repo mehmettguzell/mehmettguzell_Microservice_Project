@@ -26,10 +26,8 @@ public class InventoryController {
 
     @GetMapping("/{skuCode}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<Boolean> checkSkuExists(@PathVariable String skuCode) {
-        boolean exists = inventoryService.doesSkuCodeExist(skuCode);
-        String message = exists ? "SKU code exists" : "SKU code does not exist";
-        return new ApiResponse<>(true, message, exists);
+    public ApiResponse<InventoryResponse> getInventoryBySkuCode(@PathVariable String skuCode) {
+        return ApiResponse.ok(inventoryService.findInventoryBySkuCode(skuCode),"Inventory Is Valid");
     }
 
     @GetMapping("/all")

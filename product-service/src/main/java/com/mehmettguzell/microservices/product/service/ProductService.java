@@ -36,7 +36,12 @@ public class ProductService {
 
     public ProductResponse getProduct(String id) {
         productValidator.validateRequestId(id);
-        return mapToResponse(getProductEntityOrThrow(id));
+        return mapToResponse(getProductEntityByIdOrThrow(id));
+    }
+
+    public String getProductIdBySkuCode(String skuCode) {
+        Product product = getProductEntityBySkuCodeOrThrow(skuCode);
+        return product.getId();
     }
 
     public List<ProductResponse> getAllProducts() {
@@ -58,7 +63,14 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(String id) {
-        Product product = getProductEntityOrThrow(id);
+        Product product = getProductEntityByIdOrThrow(id);
+        resetInventoryIfExists(product);
+        removeProduct(product);
+    }
+
+    @Transactional
+    public void deleteProductBySkuCode(String skuCode) {
+        Product product = getProductEntityBySkuCodeOrThrow(skuCode);
         resetInventoryIfExists(product);
         removeProduct(product);
     }
@@ -94,7 +106,7 @@ public class ProductService {
     }
 
     private Product fetchAndUpdateProduct(String id, ProductRequest request) {
-        Product product = getProductEntityOrThrow(id);
+        Product product = getProductEntityByIdOrThrow(id);
         productMapper.updateEntity(product, request);
         return product;
     }
@@ -104,10 +116,19 @@ public class ProductService {
     }
 
 
-    private Product getProductEntityOrThrow(String id) {
+    private Product getProductEntityByIdOrThrow(String id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
+
+    private Product getProductEntityBySkuCodeOrThrow(String skuCode) {
+        Product product = productRepository.findBySkuCode(skuCode);
+        if (product == null) {
+            throw new ProductNotFoundException(skuCode);
+        }
+        return product;
+    }
+
 
     private Product saveProductWithLog(Product product, String action) {
         productRepository.save(product);
@@ -140,4 +161,6 @@ public class ProductService {
     private void logProduct(Product product, String action) {
         log.info("Product {} : id={} , name={}", action, product.getId(), product.getName());
     }
+
+
 }

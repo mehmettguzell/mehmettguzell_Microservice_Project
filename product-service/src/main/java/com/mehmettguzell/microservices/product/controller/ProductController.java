@@ -30,6 +30,12 @@ public class ProductController {
         return ApiResponse.ok(productService.getProduct(id), "Product Found");
     }
 
+    @GetMapping("get-id/{skuCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<String> getProductBySkuCode(@PathVariable String skuCode){
+        return ApiResponse.ok(productService.getProductIdBySkuCode(skuCode), "Product Found");
+    }
+
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<List<ProductResponse>> getAllProducts(){

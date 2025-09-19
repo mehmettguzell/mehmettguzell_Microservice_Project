@@ -28,14 +28,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResponse, status);
     }
 
-    @ExceptionHandler(ProductOutOfStockException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleOutOfStock(ProductOutOfStockException ex) {
-        return buildApiResponse(HttpStatus.CONFLICT, ex.getMessage());
-    }
-
-    @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleOrderNotFound(OrderNotFoundException ex) {
-        return buildApiResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    @ExceptionHandler(InvalidOrderRequestException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleInvalidOrderRequest(InvalidOrderRequestException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(InvalidSkuCodeException.class)
@@ -43,6 +38,25 @@ public class GlobalExceptionHandler {
         return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(OrderCanNotBeCanceledException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleOrderCanNotBeCanceled(OrderCanNotBeCanceledException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(OrderCannotBeConfirmedException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleOrderCannotBeConfirmed(OrderCannotBeConfirmedException ex) {
+        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleOrderNotFound(OrderNotFoundException ex) {
+        return buildApiResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(ProductOutOfStockException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleOutOfStock(ProductOutOfStockException ex) {
+        return buildApiResponse(HttpStatus.CONFLICT, ex.getMessage());
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleValidation(MethodArgumentNotValidException ex) {
         return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -51,10 +65,5 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleException(Exception ex) {
         return buildApiResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidOrderRequestException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleInvalidOrderRequest(InvalidOrderRequestException ex) {
-        return buildApiResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 }

@@ -1,7 +1,6 @@
 package com.mehmettguzell.microservices.product.client;
 
 import com.mehmettguzell.microservices.product.dto.ApiResponse;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.service.annotation.DeleteExchange;
 import org.springframework.web.service.annotation.GetExchange;
