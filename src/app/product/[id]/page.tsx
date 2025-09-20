@@ -3,7 +3,6 @@ import { getProductById } from "@/services/productService";
 import ProductIdCard from "@/components/product/ProductIdCard";
 import { getInventoryBySkuCode } from "@/services/inventoryService";
 import DeleteProductButton from "@/components/product/DeleteProductButton";
-import { toast } from "react-hot-toast";
 import { Product } from "@/types/Product";
 import { ApiErrorData } from "@/types/ApiResponse";
 import { notFound } from "next/navigation";
@@ -20,7 +19,6 @@ export default async function ProductIdPage({ params }: Props) {
     product = await getProductById(productId);
   } catch (err) {
     notFound();
-    return;
   }
 
   const inventory = await getInventoryBySkuCode(product.skuCode);
