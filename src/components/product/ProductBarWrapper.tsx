@@ -9,6 +9,7 @@ import {
   searchProductsByName,
   getAllProducts,
 } from "@/services/productService";
+import toast from "react-hot-toast";
 
 interface Props {
   products: Product[];
@@ -18,7 +19,6 @@ export default function ProductBarWrapper({ products }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [productList, setProductList] = useState<Product[]>(products);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   function debounce(func: (...args: any[]) => void, wait: number) {
     let timeout: ReturnType<typeof setTimeout> | null;
@@ -31,7 +31,6 @@ export default function ProductBarWrapper({ products }: Props) {
   const fetchProducts = useCallback(
     debounce(async (query: string) => {
       setLoading(true);
-      setError("");
       try {
         if (!query) {
           setProductList(products);
@@ -40,7 +39,7 @@ export default function ProductBarWrapper({ products }: Props) {
           setProductList(result);
         }
       } catch (e) {
-        setError("Ürünler aranırken bir hata oluştu.");
+        toast.error(" Search failed.");
       } finally {
         setLoading(false);
       }
@@ -56,7 +55,6 @@ export default function ProductBarWrapper({ products }: Props) {
     <div>
       <ProductSearchBar value={searchQuery} onChange={setSearchQuery} />
       {loading && <div>Loading...</div>}
-      {error && <div className="text-red-500">{error}</div>}
       <ProductList products={productList} />
       <ProductCreateCard setProducts={setProductList} />
     </div>

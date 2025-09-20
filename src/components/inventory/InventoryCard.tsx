@@ -32,12 +32,12 @@ export default function InventoryCard({ inventory }: Props) {
       setLoading(true);
 
       if (amount <= 0) {
-        toast.error("Miktar 0 veya negatif olamaz");
+        toast.error("Quantity cannot be zero or negative");
         return;
       }
 
       await addStock(inventory.id, amount);
-      toast.success(`${amount} adet stok eklendi ✅`);
+      toast.success(`${amount} items added to stock ✅`);
       router.refresh();
       deleteState();
     } catch (error) {
@@ -53,7 +53,7 @@ export default function InventoryCard({ inventory }: Props) {
     try {
       setLoading(true);
       await deleteInventoryById(inventory.id);
-      toast.success("Envanter silindi 🗑️");
+      toast.success("Inventory deleted 🗑️");
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {
@@ -67,7 +67,7 @@ export default function InventoryCard({ inventory }: Props) {
   const handleDeleteStock = async () => {
     try {
       await setQuantityZeroById(inventory.id);
-      toast.success("Stok sıfırlandı 🗑️");
+      toast.success("Stock quantity set to zero 🗑️");
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {
