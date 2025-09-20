@@ -1,4 +1,3 @@
-import {} from "react";
 import { getProductById } from "@/services/productService";
 import ProductIdCard from "@/components/product/ProductIdCard";
 import { getInventoryBySkuCode } from "@/services/inventoryService";
@@ -12,7 +11,7 @@ interface Props {
 }
 
 export default async function ProductIdPage({ params }: Props) {
-  const { id: productId } = await params;
+  const { id: productId } = params;
 
   let product: Product | ApiErrorData;
   try {
@@ -24,9 +23,16 @@ export default async function ProductIdPage({ params }: Props) {
   const inventory = await getInventoryBySkuCode(product.skuCode);
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-4">Product : {product.name}</h1>
+    <div className="min-h-screen bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700 p-6 sm:p-12 flex flex-col items-center space-y-8">
+      <h1
+        className="text-4xl sm:text-5xl font-extrabold text-center text-transparent bg-clip-text
+                     bg-gradient-to-r from-emerald-400 via-lime-400 to-yellow-400 drop-shadow-lg"
+      >
+        Product: {product.name}
+      </h1>
+
       <ProductIdCard product={product} inventory={inventory} />
+
       <DeleteProductButton productId={productId} />
     </div>
   );

@@ -11,7 +11,7 @@ interface Props {
 
 export default function OrderList({ allOrders, onCancel, onConfirm }: Props) {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="order-list">
       {allOrders.map((order) => (
         <OrderCard
           key={order.id}

@@ -12,14 +12,22 @@ interface Props {
 
 export default function OrderCard({ order, onCancel, onConfirm }: Props) {
   return (
-    <div className="border p-4 rounded shadow">
-      <h3>{order.skuCode}</h3>
-      <p>Order Number: {order.orderNumber}</p>
-      <p>Quantity: {order.quantity}</p>
-      <p>Fiyat: {order.price} ₺</p>
-      <p>Status: {order.status}</p>
-      <CancelOrder order={order} onCancel={onCancel} />
-      <ConfirmOrder order={order} onConfirm={onConfirm} />
+    <div className="orderCard-div">
+      <h3 className="orderCard-header">{order.skuCode}</h3>
+      <p className="orderCard-body font-semibold">
+        Order Number: {order.orderNumber}
+      </p>
+      <p className="orderCard-body">Quantity: {order.quantity}</p>
+      <p className="orderCard-body">Fiyat: {order.price} ₺</p>
+      <p
+        className={`font-semibold ${order.status === "PENDING" ? "text-yellow-500" : order.status === "CONFIRMED" ? "text-green-500" : "text-red-500"}`}
+      >
+        Status: {order.status}
+      </p>
+      <div className="orderCard-footer">
+        <CancelOrder order={order} onCancel={onCancel} />
+        <ConfirmOrder order={order} onConfirm={onConfirm} />
+      </div>
     </div>
   );
 }

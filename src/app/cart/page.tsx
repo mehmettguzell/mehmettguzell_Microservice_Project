@@ -6,8 +6,8 @@ export default async function CartPage() {
   const allOrders = await getAllOrders();
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+    <div className="memo-div ">
+      <h1 className="memo-h1">🛒 Your Cart</h1>
       <OrderWrapper allOrders={allOrders} />
     </div>
   );

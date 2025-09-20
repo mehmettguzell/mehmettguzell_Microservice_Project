@@ -22,29 +22,25 @@ export default function InventoryCard({ inventory }: Props) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const deleteState = () => {
+  const resetAll = () => {
     setAmount(0);
+    setLoading(false);
   };
 
   const handleAddStock = async (amount: number) => {
     try {
       validateInventoryInput(inventory.skuCode, amount);
-      setLoading(true);
-
       if (amount <= 0) {
         toast.error("Quantity cannot be zero or negative");
         return;
       }
-
+      setLoading(true);
       await addStock(inventory.id, amount);
       toast.success(`${amount} items added to stock ✅`);
       router.refresh();
-      deleteState();
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
+      resetAll();
+    } catch (err) {
+      if (err instanceof Error) toast.error(err.message);
       resetAll();
     }
   };
@@ -55,11 +51,8 @@ export default function InventoryCard({ inventory }: Props) {
       await deleteInventoryById(inventory.id);
       toast.success("Inventory deleted 🗑️");
       router.refresh();
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
+    } catch (err) {
+      if (err instanceof Error) toast.error(err.message);
       resetAll();
     }
   };
@@ -69,50 +62,43 @@ export default function InventoryCard({ inventory }: Props) {
       await setQuantityZeroById(inventory.id);
       toast.success("Stock quantity set to zero 🗑️");
       router.refresh();
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
+    } catch (err) {
+      if (err instanceof Error) toast.error(err.message);
       resetAll();
     }
   };
 
-  const resetAll = () => {
-    setAmount(0);
-    setLoading(false);
-  };
-
   return (
-    <div className="max-w-md mx-auto bg-gradient-to-br from-gray-50 to-white shadow-lg rounded-2xl p-6 border border-gray-200 hover:shadow-2xl transition-all duration-300">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-800">
-          SKU: {inventory.skuCode}
-        </h2>
-        <span className="text-sm font-medium text-white bg-blue-500 px-3 py-1 rounded-full shadow-md">
-          ID: {inventory.id}
-        </span>
+    <div className="mt-6 max-w-md mx-auto relative bg-white/50 backdrop-blur-md rounded-3xl shadow-2xl border border-gray-200 p-6 hover:shadow-3xl transition-shadow duration-300">
+      <span className="absolute top-4 right-4 text-xs sm:text-sm font-semibold bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 text-white px-3 py-1 rounded-full shadow-md hover:shadow-lg transition-shadow duration-300">
+        ID: {inventory.id}
+      </span>
+      <div className="absolute top-14 right-4">
         <DeleteInventory
           onDeleteInventory={onDeleteInventory}
           id={inventory.id}
         />
       </div>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-extrabold text-gray-800 text-lg sm:text-xl">
+          SKU: {inventory.skuCode}
+        </h3>
+      </div>
 
-      <div className="mb-4"></div>
-
-      <div className="text-gray-700">
-        <p className="mb-2 text-lg font-semibold">
+      <div className="text-gray-700 mb-4">
+        <p className="mb-1 text-lg font-semibold">
           Quantity: <span className="text-gray-900">{inventory.quantity}</span>
         </p>
         <p className="text-gray-500 text-sm">Updated recently</p>
-
-        <AddQuantitySection
-          amount={amount}
-          setAmount={setAmount}
-          onAdd={handleAddStock}
-        />
-        <DeleteStocks onDelete={handleDeleteStock} />
       </div>
+
+      {/* Add & Delete Sections */}
+      <AddQuantitySection
+        amount={amount}
+        setAmount={setAmount}
+        onAdd={handleAddStock}
+      />
+      <DeleteStocks onDelete={handleDeleteStock} />
     </div>
   );
 }

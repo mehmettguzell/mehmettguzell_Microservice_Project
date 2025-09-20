@@ -7,11 +7,9 @@ interface Props {
 
 export default function InventoryList({ initialInventory }: Props) {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
       {initialInventory.map((inventory) => (
-        <div key={inventory.id} className="border p-4 rounded shadow">
-          <InventoryCard inventory={inventory} />
-        </div>
+        <InventoryCard key={inventory.id} inventory={inventory} />
       ))}
     </div>
   );

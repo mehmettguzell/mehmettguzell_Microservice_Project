@@ -30,7 +30,8 @@
       "@/productComponents/*": ["./src/components/product/*"],
       "@/inventoryComponents/*": ["./src/components/inventory/*"],
       "@/orderComponents/*": ["./src/components/order/*"],
-      "@/validator/*": ["./src/validator/*"]
+      "@/validator/*": ["./src/validator/*"],
+      "@/styles": ["./src/styles"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

@@ -1,15 +1,16 @@
 "use client";
-import React, { startTransition, useState } from "react";
+
+import React, { useState } from "react";
 import { Product } from "@/types/Product";
 import { createProduct } from "@/services/productService";
 import { isSkuCodeValid } from "@/services/inventoryService";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { clear } from "console";
 
 interface Props {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 }
+
 export default function ProductCreateCard({ setProducts }: Props) {
   const [name, setName] = useState("");
   const [skuCode, setSkuCode] = useState("");
@@ -17,6 +18,7 @@ export default function ProductCreateCard({ setProducts }: Props) {
   const [description, setDescription] = useState("");
 
   const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,11 +30,12 @@ export default function ProductCreateCard({ setProducts }: Props) {
     };
 
     if (!(await validateSkuCode())) return;
+
     try {
       const response = await createProduct(newProductData);
       handleCreationSuccess(response);
-    } catch (err) {
-      handleError(err);
+    } catch (err: any) {
+      toast.error(err.message);
     }
   };
 
@@ -48,9 +51,6 @@ export default function ProductCreateCard({ setProducts }: Props) {
     router.refresh();
   };
 
-  const handleError = (err: any) => {
-    toast.error(err.message);
-  };
   const clearForm = () => {
     setName("");
     setSkuCode("");
@@ -61,55 +61,61 @@ export default function ProductCreateCard({ setProducts }: Props) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border p-4 rounded shadow space-y-3 max-w-md"
+      className="max-w-md mx-auto p-6 rounded-3xl bg-white/50 backdrop-blur-md shadow-2xl border border-gray-200 space-y-5 transition-shadow duration-300 hover:shadow-3xl"
     >
-      <h3 className="text-xl font-bold">Create New Product</h3>
+      <h3 className="text-2xl font-extrabold text-gray-800 text-center">
+        Create New Product
+      </h3>
 
       <div>
-        <label className="block font-medium">Name:</label>
+        <label className="block font-medium text-gray-700 mb-2">Name:</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full border rounded p-2"
+          className="w-full p-3 rounded-2xl border border-gray-300 text-gray-800 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:shadow-md transition-all duration-300"
           required
         />
       </div>
 
       <div>
-        <label className="block font-medium">SKU Code:</label>
+        <label className="block font-medium text-gray-700 mb-2">
+          SKU Code:
+        </label>
         <input
           type="text"
           value={skuCode}
           onChange={(e) => setSkuCode(e.target.value)}
-          className="w-full border rounded p-2"
+          className="w-full p-3 rounded-2xl border border-gray-300 text-gray-800 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:shadow-md transition-all duration-300"
           required
         />
       </div>
 
       <div>
-        <label className="block font-medium">Price:</label>
+        <label className="block font-medium text-gray-700 mb-2">Price:</label>
         <input
           type="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          className="w-full border rounded p-2"
+          className="w-full p-3 rounded-2xl border border-gray-300 text-gray-800 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:shadow-md transition-all duration-300"
           required
         />
       </div>
 
       <div>
-        <label className="block font-medium">Description:</label>
+        <label className="block font-medium text-gray-700 mb-2">
+          Description:
+        </label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full border rounded p-2"
+          className="w-full p-3 rounded-2xl border border-gray-300 text-gray-800 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:shadow-md transition-all duration-300"
         />
       </div>
 
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="w-full py-3 rounded-2xl font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-500 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
       >
         Create Product
       </button>

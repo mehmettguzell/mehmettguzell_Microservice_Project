@@ -7,9 +7,11 @@ interface Props {
 
 export default function InventoryBarWrapper({ initialInventory }: Props) {
   return (
-    <div>
+    <div className="space-y-10">
       <InventoryList initialInventory={initialInventory} />
-      <CreateInventoryCard />
+      <div className="mt-10">
+        <CreateInventoryCard />
+      </div>
     </div>
   );
 }

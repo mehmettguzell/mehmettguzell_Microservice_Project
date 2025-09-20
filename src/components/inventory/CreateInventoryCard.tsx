@@ -23,7 +23,7 @@ export default function CreateInventoryCard() {
       validateInventoryInput(newInventory.skuCode, newInventory.quantity);
       await addInventory(newInventory);
 
-      toast.success("Yeni envanter başarıyla eklendi ✅");
+      toast.success("new inventory created successfully");
 
       resetForm();
       router.refresh();
@@ -42,42 +42,42 @@ export default function CreateInventoryCard() {
   };
 
   return (
-    <div className="mt-6 max-w-md mx-auto bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl border border-gray-200 p-6 hover:shadow-2xl transition-shadow duration-300">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+    <div className="max-w-md mx-auto p-8 bg-white/50 backdrop-blur-md rounded-3xl shadow-2xl border border-gray-200 transition-shadow duration-300 hover:shadow-3xl">
+      <h2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">
         Create New Inventory
       </h2>
 
-      <form className="space-y-5" onSubmit={handleSubmit}>
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             SKU Code
           </label>
           <input
             type="text"
             value={skuCode}
             onChange={(e) => setSkuCode(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 placeholder-gray-400"
             placeholder="Enter SKU Code"
+            className="w-full p-4 rounded-2xl border border-gray-300 text-gray-800 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:shadow-md transition-all duration-300"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
             Quantity
           </label>
           <input
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-full border border-gray-300 rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition duration-200 placeholder-gray-400"
             placeholder="Enter Quantity"
+            className="w-full p-4 rounded-2xl border border-gray-300 text-gray-800 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm hover:shadow-md transition-all duration-300"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold shadow-md hover:bg-blue-600 hover:shadow-lg active:scale-95 transition-all duration-200 disabled:opacity-50"
+          className="w-full py-3 rounded-2xl font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-500 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 disabled:opacity-50"
         >
           {loading ? "Creating..." : "Create Inventory"}
         </button>

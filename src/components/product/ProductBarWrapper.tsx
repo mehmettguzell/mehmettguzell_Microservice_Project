@@ -5,10 +5,7 @@ import ProductSearchBar from "./ProductSearchBar";
 import ProductList from "./ProductList";
 import ProductCreateCard from "@/components/product/ProductCreateCard";
 import { Product } from "@/types/Product";
-import {
-  searchProductsByName,
-  getAllProducts,
-} from "@/services/productService";
+import { searchProductsByName } from "@/services/productService";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -39,7 +36,7 @@ export default function ProductBarWrapper({ products }: Props) {
           setProductList(result);
         }
       } catch (e) {
-        toast.error(" Search failed.");
+        toast.error("Search failed.");
       } finally {
         setLoading(false);
       }
@@ -52,9 +49,11 @@ export default function ProductBarWrapper({ products }: Props) {
   }, [searchQuery, fetchProducts]);
 
   return (
-    <div>
+    <div className="space-y-8">
       <ProductSearchBar value={searchQuery} onChange={setSearchQuery} />
-      {loading && <div>Loading...</div>}
+      {loading && (
+        <div className="text-center text-gray-500 font-medium">Loading...</div>
+      )}
       <ProductList products={productList} />
       <ProductCreateCard setProducts={setProductList} />
     </div>

@@ -6,13 +6,11 @@ export default function DeleteInventory({
   id: string;
 }) {
   return (
-    <div>
-      <button
-        onClick={() => onDeleteInventory(id)}
-        className="mt-2 bg-red-500 text-white px-4 py-2 rounded"
-      >
-        Delete
-      </button>
-    </div>
+    <button
+      onClick={() => onDeleteInventory(id)}
+      className="text-sm bg-red-500 text-white px-4 py-2 rounded-2xl shadow-md hover:bg-red-600 hover:shadow-xl active:scale-95 transition-all duration-300"
+    >
+      Delete
+    </button>
   );
 }

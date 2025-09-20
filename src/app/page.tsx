@@ -1,22 +1,28 @@
 "use client";
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-purple-100 via-pink-100 to-yellow-100 flex items-center justify-center p-8 sm:p-20">
-      <main className="relative flex flex-col gap-10 max-w-3xl w-full backdrop-blur-lg bg-white/30 shadow-2xl rounded-3xl p-10 sm:p-16 animate-fadeIn">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-800 via-sky-600 to-sky-400 mb-6 text-center sm:text-left">
+    <div className="min-h-screen bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700 flex items-center justify-center p-8 sm:p-20">
+      <main className="relative flex flex-col gap-10 max-w-3xl w-full backdrop-blur-xl bg-white/30 shadow-2xl rounded-3xl p-10 sm:p-16 animate-fadeIn">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-center sm:text-left text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-400 to-yellow-400 drop-shadow-lg">
           🚀 My First Microservice Project
         </h1>
+
         <ol className="list-decimal list-inside space-y-6 text-gray-700 text-base sm:text-lg">
-          <li className="relative pl-4 hover:pl-6 transition-all duration-500 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:rounded-full before:bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500">
+          <li className="relative pl-6 hover:pl-8 transition-all duration-500 group">
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 transform transition-transform duration-500 group-hover:scale-125"></span>
             Welcome to my first microservice project with Next.js 13!
           </li>
-          <li className="relative pl-4 hover:pl-6 transition-all duration-500 before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:rounded-full before:bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500">
+
+          <li className="relative pl-6 hover:pl-8 transition-all duration-500 group">
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 transform transition-transform duration-500 group-hover:scale-125"></span>
             This project is a simple e-commerce application that demonstrates
             the use of Next.js 13 features such as server components, API
             routes, and more.
           </li>
         </ol>
       </main>
+
       <style jsx>{`
         @keyframes fadeIn {
           0% {

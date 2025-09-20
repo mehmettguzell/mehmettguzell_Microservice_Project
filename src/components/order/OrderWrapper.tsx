@@ -24,10 +24,12 @@ export default function OrderWrapper({ allOrders }: OrderWrapperProps) {
   };
 
   return (
-    <OrderList
-      allOrders={orders}
-      onCancel={handleCancel}
-      onConfirm={handleConfirm}
-    />
+    <div className="order-wrapper">
+      <OrderList
+        allOrders={orders}
+        onCancel={handleCancel}
+        onConfirm={handleConfirm}
+      />
+    </div>
   );
 }
