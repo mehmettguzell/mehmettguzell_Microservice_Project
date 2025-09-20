@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -32,6 +33,10 @@ public class ProductService {
         Product product = mapToEntity(request);
         Product savedProduct = persistProduct(product, ActionType.CREATED);
         return mapToResponse(savedProduct);
+    }
+
+    public BigDecimal getProductPriceBySkuCode(String skuCode) {
+        return productRepository.findBySkuCode(skuCode).getPrice();
     }
 
     public ProductResponse getProduct(String id) {
@@ -161,6 +166,7 @@ public class ProductService {
     private void logProduct(Product product, String action) {
         log.info("Product {} : id={} , name={}", action, product.getId(), product.getName());
     }
+
 
 
 }

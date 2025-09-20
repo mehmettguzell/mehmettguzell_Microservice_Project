@@ -58,16 +58,23 @@ public class InventoryService {
         return inventoryRepository.existsBySkuCode(skuCode);
     }
 
-        public boolean isInStock(String skuCode, Integer quantity) {
-            inventoryValidator.validateInventoryRequest(skuCode, quantity);
-            return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
-        }
+    public boolean isInStock(String skuCode, Integer quantity) {
+        inventoryValidator.validateInventoryRequest(skuCode, quantity);
+        return inventoryRepository.existsBySkuCodeAndQuantityGreaterThanEqual(skuCode, quantity);
+    }
 
     public InventoryResponse addStock(Long id, InventoryRequest request) {
         inventoryValidator.validateInventoryRequest(request.quantity());
         Inventory inventory = getInventoryById(id);
         increaseInventoryQuantity(inventory, request.quantity());
         return saveAndLog(inventory, "Stock added to inventory:");
+    }
+
+    public void reduceStock(String skuCode, @Valid Integer quantity) {
+        inventoryValidator.validateInventoryRequest(skuCode, quantity);
+        Inventory inventory = inventoryRepository.findInventoryBySkuCode(skuCode);
+        inventory.setQuantity(inventory.getQuantity() - quantity);
+        saveAndLog(inventory, "Stock reduction:");
     }
 
     public InventoryResponse resetQuantity(Long id) {
@@ -144,6 +151,5 @@ public class InventoryService {
     private void logInventory(String message, Inventory inventory) {
         log.info("{} {}", message, inventory);
     }
-
 
 }

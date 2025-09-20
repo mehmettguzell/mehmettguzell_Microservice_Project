@@ -70,6 +70,16 @@ public class InventoryController {
         return ApiResponse.ok(inventoryService.addStock(id, request), "Inventory stock updated successfully");
     }
 
+    @PatchMapping("/reduceStock/{skuCode}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ApiResponse<Void> reduceStock(@PathVariable String skuCode,
+                                                      @RequestParam @Valid Integer quantity) {
+
+        inventoryService.reduceStock(skuCode, quantity);
+        return ApiResponse.ok(null, "Inventory reduction updated successfully");
+    }
+
+
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<InventoryResponse> deleteInventory(@RequestParam Long id){

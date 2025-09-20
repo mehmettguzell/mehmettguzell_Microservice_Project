@@ -1,6 +1,7 @@
 package com.mehmettguzell.microservices.order.service;
 
 import com.mehmettguzell.microservices.order.client.InventoryClient;
+import com.mehmettguzell.microservices.order.client.ProductClient;
 import com.mehmettguzell.microservices.order.dto.ApiResponse;
 import com.mehmettguzell.microservices.order.dto.OrderRequest;
 import com.mehmettguzell.microservices.order.dto.OrderResponse;
@@ -30,21 +31,19 @@ public class OrderService {
     private final InventoryClient inventoryClient;
     private final OrderMapper orderMapper;
     private final OrderValidator orderValidator;
+    private final ProductClient productClient;
 
     @Transactional
     public OrderResponse placeOrder(OrderRequest request) {
         validateRequest(request);
+        validateAndCancelIfOutOfStock(request);
+        Order order = createOrderWithPrice(request);
+        reduceStock(request.quantity(), request.skuCode());
 
-        ensureStockAvailabilityOrCancel(request);
+        saveOrder(order);
 
-        Order pendingOrder = createPendingOrder(request);
-        setOrderPrice(pendingOrder, request);
-
-        saveOrder(pendingOrder);
-
-        return mapToResponse(pendingOrder);
+        return mapToResponse(order);
     }
-
 
     public OrderResponse getOrderById(Long id) {
         return mapToResponse(fetchOrder(id));
@@ -90,26 +89,28 @@ public class OrderService {
     // ===========================
     // PRIVATE HELPERS
     // ===========================
+    private void reduceStock(Integer quantity, String skuCode) {
+        inventoryClient.reduceStock(skuCode, quantity);
+    }
 
     private void validateRequest(OrderRequest request) {
         validateOrderRequest(request);
     }
 
-    private void ensureStockAvailabilityOrCancel(OrderRequest request) {
-        validateAndCancelIfOutOfStock(request);
+    private Order createOrderWithPrice(OrderRequest request) {
+        Order order = mapToPendingOrder(request);
+        BigDecimal price = fetchProductPrice(request.skuCode());
+        BigDecimal total = calculateTotalPrice(request.quantity(), price);
+        order.setPrice(total);
+        return order;
     }
 
-    private Order createPendingOrder(OrderRequest request) {
-        return mapToPendingOrder(request);
+    private BigDecimal fetchProductPrice(String skuCode) {
+        return productClient.getProductPrice(skuCode).data();
     }
 
-    private void setOrderPrice(Order order, OrderRequest request) {
-        BigDecimal totalPrice = calculateTotalPrice(request);
-        order.setPrice(totalPrice);
-    }
-
-    private BigDecimal calculateTotalPrice(OrderRequest request) {
-        return request.price().multiply(BigDecimal.valueOf(request.quantity()));
+    private BigDecimal calculateTotalPrice(int quantity, BigDecimal unitPrice) {
+        return unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
 
     private void ensureOrderCanBeCancelled(Order order) {

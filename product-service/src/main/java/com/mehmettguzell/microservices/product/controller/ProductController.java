@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -28,6 +29,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<ProductResponse> getProduct(@PathVariable String id){
         return ApiResponse.ok(productService.getProduct(id), "Product Found");
+    }
+
+    @GetMapping("/price/{skuCode}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<BigDecimal> getProductPrice(@PathVariable String skuCode){
+        return  ApiResponse.ok( productService.getProductPriceBySkuCode(skuCode), "Product Price Found");
     }
 
     @GetMapping("get-id/{skuCode}")
