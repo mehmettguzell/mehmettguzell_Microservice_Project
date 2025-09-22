@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default async function ProductIdPage({ params }: Props) {
-  const { id: productId } = params;
+  const { id: productId } = await params;
 
   let product: Product | ApiErrorData;
   try {

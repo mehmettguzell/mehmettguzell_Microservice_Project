@@ -25,10 +25,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* .memo-div {
-  @apply min-h-screen bg-gradient-to-tr from-purple-50 via-pink-50 to-yellow-50 p-6 sm:p-12 flex flex-col items-center;
-} */
-
 .memo-div {
   @apply min-h-screen bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700 p-6 sm:p-12 flex flex-col items-center;
 }
@@ -62,7 +58,7 @@ body {
   @apply px-5 py-2 rounded-2xl font-semibold text-white bg-gradient-to-r from-green-500 to-green-600 shadow-md hover:scale-105 hover:shadow-xl transition-all duration-300;
 }
 
-/* INventory CSS */
+/* Inventory CSS */
 .inventory-deleteStocks-button {
   @apply w-full py-2 rounded-2xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 shadow-md hover:scale-105 hover:shadow-lg transition-all duration-300 mt-2;
 }
