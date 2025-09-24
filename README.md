@@ -31,7 +31,6 @@ Bu proje boyunca birçok yeni deneyim elde ettim:
 - **Modern Yazılım Süreçleri:** Git, Maven, CI/CD benzeri süreçlerle gerçek iş akışını deneyimledim.
 
 [Proje Yapısı ve Katmanlarının Genel Görünümü](Mehmet_Guzel_Microservice_Project_README/Proje_Yapısı_ve_Katmanlarının_Genel_Görünümü.md)
-d
 
 ---
 
