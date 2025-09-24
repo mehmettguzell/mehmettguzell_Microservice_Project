@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: api-gateway
+
+server:
+  port: 9000
+
+services:
+  services:
+    product: http://localhost:8080
+    order: http://localhost:8081
+    inventory: http://localhost:8082
+
+#myapp:
+#  security:
+#    open-paths:
+#      - /swagger-ui.html
+#      - /swagger-ui/**
+#      - /v3/api-docs/**
+#      - /swagger-resources/**
+#      - /aggregate/**
+#      - /api-docs/*
+#
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    urls:
+#      - name: ProductService
+#        url: /aggregate/product-service/v3/api-docs
+#      - name: OrderService
+#        url: /aggregate/order-service/v3/api-docs
+#      - name: InventoryService
+#        url: /aggregate/inventory-service/v3/api-docs
+#  api-docs:
+#    path: /api-docs
+
+
+#  cloud:
+#    gateway:
+#      server:
+#        webflux:
+#          routes:
+#            - id: product-service
+#              uri: ${PRODUCT_URI:http://localhost:8080}
+#              predicates:
+#                - Path=/api/product/**
+#              filters:
+#                - StripPrefix=1
