@@ -80,7 +80,6 @@ public class ProductService {
         removeProduct(product);
     }
 
-
     // ===========================
     // PRIVATE HELPERS
     // ===========================
@@ -119,7 +118,6 @@ public class ProductService {
     private Product persistProduct(Product product, ActionType action) {
         return saveProductWithLog(product, action.getLabel());
     }
-
 
     private Product getProductEntityByIdOrThrow(String id) {
         return productRepository.findById(id)

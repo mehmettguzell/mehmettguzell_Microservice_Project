@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 @Configuration
-@ConfigurationProperties(prefix = "services")
 @Getter @Setter
+@ConfigurationProperties(prefix = "services")
 public class ServiceProperties {
     private Map<String, String> services;
 }

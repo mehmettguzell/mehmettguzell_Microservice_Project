@@ -12,16 +12,13 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class RestClientConfig {
 
-    @Value("${inventory.url}")
-    private String inventoryServiceUrl;
-
-    @Value("${product.url}")
-    private String productServiceUrl;
+    @Value("${apiGateway.url}")
+    private String apiGatewayUrl;
 
     @Bean
     public InventoryClient inventoryClient() {
         RestClient restClient = RestClient.builder()
-                .baseUrl(inventoryServiceUrl)
+                .baseUrl(apiGatewayUrl)
                 .build();
 
         var restClientAdapter = RestClientAdapter.create(restClient);
@@ -32,7 +29,7 @@ public class RestClientConfig {
     @Bean
      public ProductClient productClient() {
         RestClient restClient = RestClient.builder()
-                .baseUrl(productServiceUrl)
+                .baseUrl(apiGatewayUrl)
                 .build();
 
         var restClientAdapter = RestClientAdapter.create(restClient);

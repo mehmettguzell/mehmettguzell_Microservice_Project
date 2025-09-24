@@ -5,10 +5,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "t_inventory")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 
 public class Inventory {
