@@ -55,7 +55,7 @@ Her mikroservis kendi veritabanına sahip olacak şekilde yapılandırıldı. Bu
   - Servisler birbirinden bağımsız şekilde çalışabiliyor,
   - Veritabanlarının yaşam döngüsü (deployment, persistence, configuration) ayrı ayrı yönetilebiliyor.
 
-[**Docker Compose & application.properties Yapılandırmaları**](Mehmet_Guzel_Microservice_Project_README/Docker_Compose_&_application.properties_Yapılandırmaları.md)
+[**Docker Compose & application.properties Yapılandırmaları**](Mehmet_Guzel_Microservice_Project_readme/Docker_Compose_&_application.properties_Yapılandırmaları.md)
 
 ## API GATEWAY
 
@@ -67,7 +67,7 @@ Bu sorunu çözmek için **API Gateway** tasarladım:
 - Gateway, bu isteği doğru servise yönlendiriyor.
 - Güvenlik, kimlik doğrulama ve yetkilendirme gibi işlemler tek bir noktadan yönetiliyor.
 
-[API Gateway – Kod ve İşleyiş Açıklaması](Mehmet_Guzel_Microservice_Project_README/API_Gateway_Kod_ve_İşleyiş_Açıklaması.md)
+[API Gateway – Kod ve İşleyiş Açıklaması](Mehmet_Guzel_Microservice_Project_readme/API_Gateway_Kod_ve_İşleyiş_Açıklaması.md)
 
 ## Product, Order, Inventory Service
 
@@ -75,7 +75,7 @@ Bu sorunu çözmek için **API Gateway** tasarladım:
 - **Inventory Service**, ürünlerin **stok miktarlarını ve depodaki durumlarını** yönetir. Bu servis sayesinde, her ürünün güncel stok durumu takip edilebilir, stok yetersizliği veya fazla stok durumları tespit edilebilir. Product Service ile entegre çalışarak, ürünlerin varlığını ve miktarını doğrular; Order Service’in doğru stok bilgisiyle işlem yapmasını garanti eder.
 - **Order Service**, sipariş süreçlerinin yönetiminden sorumludur. Kullanıcıların oluşturduğu siparişleri alır, stok durumunu kontrol eder (Inventory Service ile iletişim kurarak) ve siparişin doğru bir şekilde kaydedilmesini sağlar. Böylece ürünlerin satışa sunulması, stoktan düşülmesi ve kullanıcıya doğru bilgiler sunulması bu servis üzerinden güvenli bir şekilde yürütülür.
 
-[Product & Order & Inventory Service](Mehmet_Guzel_Microservice_Project_README/Product_&_Order_&_Inventory_Service.md)
+[Product & Order & Inventory Service](Mehmet_Guzel_Microservice_Project_readme/Product_&_Order_&_Inventory_Service.md)
 
 ## Frontend
 
@@ -100,7 +100,7 @@ Bu projede **Next.js** kullanarak kullanıcı arayüzünü geliştirdim. Fronten
   - Formlar, kartlar ve butonlar kullanıcı dostu olacak şekilde tasarlandı.
   - Gradient, shadow ve hover efektleri ile görsellik artırıldı.
 
-[Frontend(Next.js)](<Mehmet_Guzel_Microservice_Project_README/Frontend(Next.js).md>)
+[Frontend(Next.js)](<Mehmet_Guzel_Microservice_Project_readme/Frontend(Next.js).md>)
 
 ---
 
