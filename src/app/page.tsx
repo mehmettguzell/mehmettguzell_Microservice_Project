@@ -5,20 +5,31 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700 flex items-center justify-center p-8 sm:p-20">
       <main className="relative flex flex-col gap-10 max-w-3xl w-full backdrop-blur-xl bg-white/30 shadow-2xl rounded-3xl p-10 sm:p-16 animate-fadeIn">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-center sm:text-left text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-lime-400 to-yellow-400 drop-shadow-lg">
-          🚀 My First Microservice Project
+          🚀 MehmettGuzell Microservice Project
         </h1>
-
         <ol className="list-decimal list-inside space-y-6 text-gray-700 text-base sm:text-lg">
           <li className="relative pl-6 hover:pl-8 transition-all duration-500 group">
             <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 transform transition-transform duration-500 group-hover:scale-125"></span>
-            Welcome to my first microservice project with Next.js 13!
+            Mikroservis mimarisi ile bağımsız ve ölçeklenebilir servisler
+            geliştirdim.
           </li>
 
           <li className="relative pl-6 hover:pl-8 transition-all duration-500 group">
             <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 transform transition-transform duration-500 group-hover:scale-125"></span>
-            This project is a simple e-commerce application that demonstrates
-            the use of Next.js 13 features such as server components, API
-            routes, and more.
+            Spring Boot, JPA ve Docker Compose ile gerçekçi iş akışlarını
+            deneyimledim.
+          </li>
+
+          <li className="relative pl-6 hover:pl-8 transition-all duration-500 group">
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 transform transition-transform duration-500 group-hover:scale-125"></span>
+            Clean Code ve SOLID prensipleriyle sürdürülebilir kod yazma
+            alışkanlığı kazandım.
+          </li>
+
+          <li className="relative pl-6 hover:pl-8 transition-all duration-500 group">
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 transform transition-transform duration-500 group-hover:scale-125"></span>
+            Unit test ve CI/CD süreçleriyle modern yazılım geliştirme
+            pratiklerini öğrendim.
           </li>
         </ol>
       </main>
