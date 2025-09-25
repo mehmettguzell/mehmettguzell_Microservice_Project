@@ -7,9 +7,14 @@
 ## Kodlarım
 
 - [Product Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/product-service/src/main/java/com/mehmettguzell/microservices/product)
+  ![image.png](backend/Screenshot_3.png)
+
 - [Inventory Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/inventory-service/src/main/java/com/mehmettguzell/microservices/inventory)
+  ![image.png](backend/Screenshot_1.png)
+
 - [Order Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/order-service/src/main/java/com/mehmettguzell/microservices/order)
-  
+  ![image.png](backend/Screenshot_2.png)
+
 ## 1. Domain Model
 
 ### Product
@@ -92,7 +97,7 @@ public class Order {
 
 ## 2. API Response ve DTOs
 
- Tüm servisler için geçerli olacak bir `ApiResponse` yapısı tasarladım.
+Tüm servisler için geçerli olacak bir `ApiResponse` yapısı tasarladım.
 
 - Böylece her API çağrısı, başarılı ya da hatalı olsun, aynı formatta yanıt verecek.
 
@@ -105,7 +110,7 @@ public class Order {
     "name": "Laptop",
     "skuCode": "LAP123",
     "description": "High performance laptop",
-    "price": 1500.00
+    "price": 1500.0
   }
 }
 ```
@@ -179,14 +184,14 @@ Controller katmanı ise yalnızca endpoint tanımlamalarını yapıyor. Burada d
 public class ProductController {
 
     private final ProductService productService;
-    
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<ProductResponse> createProduct(@Valid @RequestBody ProductRequest productRequest){
         return ApiResponse.ok(
         productService.createProduct(productRequest), "New Product Created");
     }
-    
+
     ....
     ...
     ..
@@ -208,7 +213,7 @@ public class InventoryController {
     public ApiResponse<InventoryResponse> addInventory(@Valid @RequestBody InventoryRequest request) {
         return ApiResponse.ok(inventoryService.createInventory(request), "Inventory created successfully");
     }
-    
+
     ....
     ...
     ..
@@ -230,7 +235,7 @@ public class OrderController {
     public ApiResponse<OrderResponse> placeOrder(@Valid @RequestBody OrderRequest orderRequest) {
         return ApiResponse.ok(orderService.placeOrder(orderRequest),"Order Created");
     }
-    
+
     ....
     ...
     ..
@@ -255,7 +260,7 @@ public interface ProductRepository extends MongoRepository<Product,String> {
     boolean existsBySkuCode(String skuCode);
 
     Product findBySkuCode(String skuCode);
-} 
+}
 ```
 
 - Burada method naming convention sayesinde **SQL veya MongoDB query yazmadan**, ihtiyacım olan tüm sorguları otomatik olarak Spring Data oluşturuyor.
@@ -317,7 +322,7 @@ public class ProductService {
         Product savedProduct = persistProduct(product, ActionType.CREATED);
         return mapToResponse(savedProduct);
     }
-    
+
 		....
 		...
 		..
@@ -325,7 +330,7 @@ public class ProductService {
 ```
 
 ```java
-  
+
   // Service layer
   private void validateProductRequest(ProductRequest request){
       productValidator.validateSkuCode(request.skuCode());
@@ -362,7 +367,7 @@ public class InventoryService {
         Inventory inventory = mapToEntity(request);
         return saveAndLog(inventory, "Created inventory:");
     }
-    
+
 		....
 		...
 		..
@@ -407,7 +412,7 @@ public class OrderService {
         orderValidator.validatePrice(request.price());
         orderValidator.validateQuantity(request.quantity());
     }
-  
+
 		//Validation Layer
     public void validateQuantity(Integer quantity) {
         if (quantity == null) throw new InvalidOrderRequestException("Quantity cannot be null");
@@ -567,7 +572,7 @@ Bu yaklaşım, **gerçek dünya mikroservis projelerinde best-practice** olarak 
 
 ## 8. Exception Handling
 
-Sistemlerde, hata yönetimi en az başarılı yanıtlar kadar önemlidir. 
+Sistemlerde, hata yönetimi en az başarılı yanıtlar kadar önemlidir.
 
 - Bunun için global bir `GlobalExceptionHandler` geliştirdim.
 - Burada her exception türü, ApiResponse yapısına uygun olarak yakalanıyor ve anlamlı bir yanıt döndürülüyor.
