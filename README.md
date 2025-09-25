@@ -1,4 +1,9 @@
 # Mehmet Guzel Microservice Project
+- [Api Gateway](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/api-gateway/src/main/java/com/mehmettguzell/microservices/api_gateway)
+- [Product Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/product-service/src/main/java/com/mehmettguzell/microservices/product)
+- [Inventory Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/inventory-service/src/main/java/com/mehmettguzell/microservices/inventory)
+- [Order Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/order-service/src/main/java/com/mehmettguzell/microservices/order)
+- [Frontend](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/frontend/src)
 
 # Proje Tanıtımı
 
