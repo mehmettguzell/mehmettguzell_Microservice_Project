@@ -6,10 +6,10 @@
 
 ## Kodlarım
 
-- (Product Service)[]
-- (Inventory Service)[]
-- (Order Service)[]
-
+- [Product Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/product-service/src/main/java/com/mehmettguzell/microservices/product)
+- [Inventory Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/inventory-service/src/main/java/com/mehmettguzell/microservices/inventory)
+- [Order Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/order-service/src/main/java/com/mehmettguzell/microservices/order)
+  
 ## 1. Domain Model
 
 ### Product
