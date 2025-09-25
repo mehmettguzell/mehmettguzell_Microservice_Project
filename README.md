@@ -1,4 +1,5 @@
 # Mehmet Guzel Microservice Project
+
 - [Api Gateway](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/api-gateway/src/main/java/com/mehmettguzell/microservices/api_gateway)
 - [Product Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/product-service/src/main/java/com/mehmettguzell/microservices/product)
 - [Inventory Service](https://github.com/mehmettguzell/mehmettguzell_Microservice_Project/tree/main/backend/inventory-service/src/main/java/com/mehmettguzell/microservices/inventory)
@@ -7,9 +8,9 @@
 
 # Proje Tanıtımı
 
-Bu projeyi geliştirmemdeki temel amaç, **mikroservis mimarisi** kullanarak modern, ölçeklenebilir ve güvenli bir web uygulaması geliştirmekti.
+Bu projenin temel amacı, **mikroservis mimarisi** kullanılarak modern, ölçeklenebilir ve güvenli bir web uygulaması geliştirmektir.
 
-- Ayrıca farklı teknolojileri birlikte kullanarak gerçek bir yazılım geliştirme sürecini uçtan uca deneyimlemek istedim.
+- Farklı teknolojileri entegre ederek uçtan uca bir yazılım geliştirme süreci tasarladım.
 - Bunun için bir **Envanter Yönetim Sistemi** tasarladım.
 - Projede hem backend hem frontend bileşenleri, hem de container tabanlı yapılandırma adımları yer aldı.
 - Bu sayede hem teorik bilgimi pekiştirdim hem de gerçek hayata uyarlanabilir bir çözüm ortaya koydum.
@@ -22,18 +23,16 @@ Bu projeyi geliştirmemdeki temel amaç, **mikroservis mimarisi** kullanarak mod
 
 ## Kazanımlar
 
-Bu proje boyunca birçok yeni deneyim elde ettim:
-
 - **Spring Boot ve Spring Framework:** Bağımsız, güvenli ve ölçeklenebilir servisler geliştirdim.
-- **JPA & ORM:** Veri tabanı yönetimi ve servis katmanı tasarımı konusunda pratik yaptım.
-- **Mikroservis mimarisi:** Servislerin bağımsızlığını, iletişimini ve merkezi yönetimini öğrendim.
-- **API Gateway:** Servisler arası trafik yönetimi, güvenlik (CORS, authentication, authorization) ve tek giriş noktası konseptini deneyimledim.
-- **MySQL & MongoDB:** Farklı veri tabanı türlerinin güçlü ve zayıf yanlarını kıyaslama fırsatı buldum.
-- **Docker Compose:** Her servisin kendi veritabanı ile container tabanlı orkestrasyonunu deneyimledim.
-- **Clean Code & SOLID:** Okunabilir, sürdürülebilir ve geliştirilebilir kod yazma becerisi kazandım.
-- **Refactoring & Performans Optimizasyonu:** Kod kalitesini artırmayı öğrendim.
-- **Unit Test:** Test odaklı geliştirme pratiği yaptım.
-- **Modern Yazılım Süreçleri:** Git, Maven, CI/CD benzeri süreçlerle gerçek iş akışını deneyimledim.
+- **JPA & ORM:** Veri tabanı yönetimini etkinleştiren ve servis katmanını destekleyen çözümler tasarladım.
+- **Mikroservis Mimarisi:** Servislerin bağımsızlığını, iletişimini ve merkezi yönetimini uyguladım.
+- **API Gateway:** Servisler arası trafik yönetimi, güvenlik (CORS, authentication, authorization) ve tek giriş noktası konseptini hayata geçirdim.
+- **MySQL & MongoDB:** Farklı veri tabanı türlerinin güçlü ve zayıf yönlerini karşılaştırarak projeye entegre ettim.
+- **Docker Compose:** Servislerin kendi veritabanlarıyla birlikte container tabanlı orkestrasyonunu gerçekleştirdim.
+- **Clean Code & SOLID:** Okunabilir, sürdürülebilir ve geliştirilebilir kod yapıları uyguladım.
+- **Refactoring & Performans Optimizasyonu:** Kod kalitesini artırmaya ve performansı iyileştirmeye yönelik çalışmalar yaptım.
+- **Unit Test:** Test odaklı geliştirme süreçlerini projeye dahil ettim.
+- **Modern Yazılım Süreçleri:** Git, Maven ve CI/CD araçlarıyla kurumsal iş akışlarını deneyimledim.
 
 [Proje Yapısı ve Katmanlarının Genel Görünümü](Mehmet_Guzel_Microservice_Project_readme/Proje_Yapısı_ve_Katmanlarının_Genel_Görünümü.md)
 
@@ -41,7 +40,7 @@ Bu proje boyunca birçok yeni deneyim elde ettim:
 
 # Proje Detayları
 
-Öğrenme hedefim doğrultusunda bir **envanter yönetim sistemi** tasarlamaya karar verdim.
+Deneyimlerimi pekiştirmek ve yansıtmak için bir **envanter yönetim sistemi** tasarladım.
 
 - Her servis bağımsız çalışacak şekilde ve kendi veritabanına sahip olacak şekilde yapılandırıldı.
 - **Inventory Service (MySQL):** Ürünlerin stok yönetimi ve güncel miktarlarının takibi.
